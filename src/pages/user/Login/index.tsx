@@ -92,7 +92,7 @@ const Login: React.FC = () => {
           {
             <>
               <ProFormText
-                name="username"
+                name="id"
                 fieldProps={{
                   size: 'large',
                   prefix: <UserOutlined className={styles.prefixIcon} />,
