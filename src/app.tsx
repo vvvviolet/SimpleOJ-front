@@ -26,9 +26,13 @@ export async function getInitialState(): Promise<{
   loading?: boolean;
   fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
 }> {
+  const token = localStorage.getItem('token');
+  // console.log(token);
   const fetchUserInfo = async () => {
     try {
-      const msg = await queryCurrentUser();
+      const msg = await queryCurrentUser(token ? token : '');
+      // console.log('************');
+      // console.log(msg.data);
       return msg.data;
     } catch (error) {
       history.push(loginPath);

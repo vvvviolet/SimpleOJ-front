@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { rearg } from 'lodash';
 
 const waitTime = (time: number = 100) => {
   return new Promise((resolve) => {
@@ -41,6 +42,7 @@ export default {
       });
       return;
     }
+
     res.send({
       success: true,
       data: {
@@ -88,7 +90,7 @@ export default {
       access = 'admin';
       return;
     }
-    if (password === 'ant.design' && id === 'user') {
+    if (password === 'user' && id === 'user') {
       res.send({
         status: 'ok',
         type,

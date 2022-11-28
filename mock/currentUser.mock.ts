@@ -2,7 +2,7 @@
 import { Request, Response } from 'express';
 
 export default {
-  'GET /api/currentUser': (req: Request, res: Response) => {
+  'GET 7': (req: Request, res: Response) => {
     res.status(200).send({
       name: '杨超',
       avatar: 'https://avatars0.githubusercontent.com/u/507615?s=40&v=4',

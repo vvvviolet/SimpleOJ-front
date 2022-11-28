@@ -3,12 +3,14 @@
 import { request } from 'umi';
 
 /** 获取当前的用户 GET /api/currentUser */
-export async function currentUser(options?: { [key: string]: any }) {
+export async function currentUser(token: string) {
   return request<{
     data: API.CurrentUser;
-  }>('/api/currentUser', {
+  }>('https://150.158.80.33:7191/api/currentUser', {
     method: 'GET',
-    ...(options || {}),
+    headers: {
+      authorization: 'Bearer ' + token,
+    },
   });
 }
 

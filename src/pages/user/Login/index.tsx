@@ -40,11 +40,15 @@ const Login: React.FC = () => {
     try {
       // 登录
       const msg = await login({ ...values });
+      console.log(msg.data?.token);
       if (msg.status === 'ok') {
         const defaultLoginSuccessMessage = intl.formatMessage({
           id: 'pages.login.success',
           defaultMessage: '登录成功！',
         });
+
+        localStorage.setItem('token', msg.data?.token ? msg.data?.token : '');
+
         message.success(defaultLoginSuccessMessage);
         await fetchUserInfo();
         /** 此方法会跳转到 redirect 参数所在的位置 */
@@ -99,7 +103,7 @@ const Login: React.FC = () => {
                 }}
                 placeholder={intl.formatMessage({
                   id: 'pages.login.username.placeholder',
-                  defaultMessage: '用户名: admin or user',
+                  defaultMessage: '用户名',
                 })}
                 rules={[
                   {
@@ -121,7 +125,7 @@ const Login: React.FC = () => {
                 }}
                 placeholder={intl.formatMessage({
                   id: 'pages.login.password.placeholder',
-                  defaultMessage: '密码: ant.design',
+                  defaultMessage: '密码',
                 })}
                 rules={[
                   {

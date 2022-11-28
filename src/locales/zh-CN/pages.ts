@@ -1,5 +1,5 @@
 export default {
-  'pages.layouts.userLayout.title': 'Ant Design 是西湖区最具影响力的 Web 设计规范',
+  'pages.layouts.userLayout.title': 'SimpleOJ',
   'pages.login.accountLogin.tab': '账户密码登录',
   'pages.login.accountLogin.errorMessage': '错误的用户名和密码(admin/ant.design)',
   'pages.login.failure': '登录失败，请重试！',
@@ -23,9 +23,9 @@ export default {
   'pages.login.loginWith': '其他登录方式 :',
   'pages.login.registerAccount': '注册账户',
   'pages.welcome.link': '欢迎使用',
-  'pages.welcome.alertMessage': '更快更强的重型组件，已经发布。',
+  'pages.welcome.alertMessage': '诚则明矣，明则诚矣',
   'pages.admin.subPage.title': ' 这个页面只有 admin 权限才能查看',
-  'pages.admin.subPage.alertMessage': 'umi ui 现已发布，欢迎使用 npm run ui 启动体验。',
+  'pages.admin.subPage.alertMessage': '',
   'pages.searchTable.createForm.newRule': '新建规则',
   'pages.searchTable.updateForm.ruleConfig': '规则配置',
   'pages.searchTable.updateForm.basicConfig': '基本信息',

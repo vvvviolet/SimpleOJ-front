@@ -2,12 +2,14 @@ declare namespace API {
   type CurrentUser = {
     name?: string;
     avatar?: string;
-    userid?: string;
+    id?: string;
     email?: string;
     title: string;
+    role: int;
+    status: int;
     access?: string;
     phone?: string;
-    ip?: string;
+    ipv4?: string;
   };
 
   type ErrorResponse = {
@@ -39,7 +41,11 @@ declare namespace API {
   type LoginResult = {
     status?: string;
     type?: string;
-    currentAuthority?: string;
+    data?: {
+      user?: CurrentUser;
+      token: string;
+      ipv4: string;
+    };
   };
 
   type NoticeIconItem = {
