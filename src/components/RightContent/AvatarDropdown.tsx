@@ -1,5 +1,5 @@
-import { outLogin } from '@/services/ant-design-pro/api';
-import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
+import { outLogin } from '@/services/SimpleOJ/login';
+import { LogoutOutlined } from '@ant-design/icons';
 import { Avatar, Menu, Spin } from 'antd';
 import type { ItemType } from 'antd/lib/menu/hooks/useItems';
 import { stringify } from 'querystring';
@@ -17,13 +17,15 @@ export type GlobalHeaderRightProps = {
  * 退出登录，并且将当前的 url 保存
  */
 const loginOut = async () => {
-  await outLogin();
+  const token = localStorage.getItem('token');
+  localStorage.setItem('token', '');
+  await outLogin(token ? token : '');
   const { query = {}, search, pathname } = history.location;
   const { redirect } = query;
   // Note: There may be security issues, please note
-  if (window.location.pathname !== '/user/login' && !redirect) {
+  if (window.location.pathname !== '/common/login' && !redirect) {
     history.replace({
-      pathname: '/user/login',
+      pathname: '/common/login',
       search: stringify({
         redirect: pathname + search,
       }),
@@ -31,9 +33,9 @@ const loginOut = async () => {
   }
 };
 
-const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
+const AvatarDropdown: React.FC<GlobalHeaderRightProps> = () => {
   const { initialState, setInitialState } = useModel('@@initialState');
-  console.log(initialState);
+  // console.log(initialState);
   const onMenuClick = useCallback(
     (event: MenuInfo) => {
       const { key } = event;
@@ -64,29 +66,12 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
   }
 
   const { currentUser } = initialState;
-
-  if (!currentUser || !currentUser.name) {
+  console.log('CURRENT', currentUser);
+  if (!currentUser || !currentUser.data.name) {
     return loading;
   }
 
   const menuItems: ItemType[] = [
-    ...(menu
-      ? [
-          {
-            key: 'center',
-            icon: <UserOutlined />,
-            label: '个人中心',
-          },
-          {
-            key: 'settings',
-            icon: <SettingOutlined />,
-            label: '个人设置',
-          },
-          {
-            type: 'divider' as const,
-          },
-        ]
-      : []),
     {
       key: 'logout',
       icon: <LogoutOutlined />,
@@ -101,8 +86,13 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
   return (
     <HeaderDropdown overlay={menuHeaderDropdown}>
       <span className={`${styles.action} ${styles.account}`}>
-        <Avatar size="small" className={styles.avatar} src={currentUser.avatar} alt="avatar" />
-        <span className={`${styles.name} anticon`}>{currentUser.name}</span>
+        <Avatar
+          size="small"
+          className={styles.avatar}
+          src="https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png"
+          alt="avatar"
+        />
+        <span className={`${styles.name} anticon`}>{currentUser.data.name}</span>
       </span>
     </HeaderDropdown>
   );

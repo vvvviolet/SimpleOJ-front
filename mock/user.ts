@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import { rearg } from 'lodash';
 
 const waitTime = (time: number = 100) => {
@@ -31,61 +31,96 @@ const getAccess = () => {
 export default {
   // 支持值为 Object 和 Array
   'GET /api/currentUser': (req: Request, res: Response) => {
-    if (!getAccess()) {
-      res.status(401).send({
-        data: {
-          isLogin: false,
-        },
-        errorCode: '401',
-        errorMessage: '请先登录！',
-        success: true,
-      });
-      return;
-    }
-
+    // if (!getAccess()) {
+    //   res.status(401).send({
+    //     data: {
+    //       isLogin: false,
+    //     },
+    //     errorCode: '401',
+    //     errorMessage: '请先登录！',
+    //     success: true,
+    //   });
+    //   return;
+    // }
     res.send({
       success: true,
+      status: 'ok',
+      code: 0,
+      msg: '成功',
       data: {
-        name: 'Serati Ma',
-        avatar: 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png',
-        userid: '00000001',
-        email: 'antdesign@alipay.com',
-        title: '交互专家',
-        access: getAccess(),
-        phone: '0752-268888888',
-        ip: '124.223.95.200',
+        user: {
+          id: '000001',
+          name: 'lucas',
+          email: 'admin@gmail.com',
+          phone: '178xxxyyyy',
+          role: 0,
+          status: 1,
+        },
+        token:
+          'eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI0ZTllMDYwNS0xMTNkLTRmMjQtODc3OC0zZGY0Y2EzNTBmOTgiLCJpZCI6ImFkbWluIiwicm9sZSI6IkFkbWluIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiQWRtaW4iLCJpc3N1ZWRBdCI6IjIwMjItMTEtMzBUMTg6MjY6MjAiLCJuYmYiOjE2Njk4MDM5ODAsImV4cCI6MTY2OTgwNDA0MCwiaXNzIjoiU2ltcGxlT2ouYWRtaW4iLCJhdWQiOiJhZG1pbiJ9.-CgHSkvEzd6LQ_XEppqHlyn0-9646vMBvMDQFdAz-cs',
+        ip: '111.187.106.17',
       },
     });
   },
   // GET POST 可省略
-  'GET /api/users': [
-    {
-      key: '1',
-      name: 'John Brown',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-    },
-    {
-      key: '2',
-      name: 'Jim Green',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-    },
-    {
-      key: '3',
-      name: 'Joe Black',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-    },
-  ],
+  'GET /api/user': {
+    total: 4,
+    success: true,
+    data: [
+      {
+        id: '2135544',
+        name: 'cn',
+        email: '465465@gmail.com',
+        phone: '1597866775654',
+        role: 'student',
+        status: '1',
+      },
+      {
+        id: '2076465',
+        name: 'laobai',
+        email: '465465@gmail.com',
+        phone: '1597866775654',
+        role: 'student',
+        status: '0',
+      },
+      {
+        id: '1134543',
+        name: 'John Brown',
+        email: '465465@gmail.com',
+        phone: '1597866775654',
+        role: 'student',
+        status: '0',
+      },
+      {
+        id: '1134543',
+        name: 'John Brown',
+        email: '465465@gmail.com',
+        phone: '1597866775654',
+        role: 'student',
+        status: '1',
+      },
+    ],
+  },
   'POST /api/login/account': async (req: Request, res: Response) => {
     const { password, id, type } = req.body;
     await waitTime(2000);
     if (password === 'admin' && id === 'admin') {
       res.send({
+        success: true,
         status: 'ok',
-        type,
-        currentAuthority: 'admin',
+        code: 0,
+        msg: '成功',
+        data: {
+          id: '000001',
+          name: 'lucas',
+          email: 'admin@gmail.com',
+          phone: '178xxxyyyy',
+          role: 0,
+          status: 1,
+          token:
+            'eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI0ZTllMDYwNS0xMTNkLTRmMjQtODc3OC0zZGY0Y2EzNTBmOTgiLCJpZCI6ImFkbWluIiwicm9sZSI6IkFkbWluIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiQWRtaW4iLCJpc3N1ZWRBdCI6IjIwMjItMTEtMzBUMTg6MjY6MjAiLCJuYmYiOjE2Njk4MDM5ODAsImV4cCI6MTY2OTgwNDA0MCwiaXNzIjoiU2ltcGxlT2ouYWRtaW4iLCJhdWQiOiJhZG1pbiJ9.-CgHSkvEzd6LQ_XEppqHlyn0-9646vMBvMDQFdAz-cs',
+          ip: '111.187.106.17',
+        },
       });
       access = 'admin';
       return;
@@ -116,7 +151,7 @@ export default {
     });
     access = 'guest';
   },
-  'POST /api/login/outLogin': (req: Request, res: Response) => {
+  'GET /api/login/outLogin': (req: Request, res: Response) => {
     access = '';
     res.send({ data: {}, success: true });
   },
@@ -161,4 +196,10 @@ export default {
   },
 
   'GET  /api/login/captcha': getFakeCaptcha,
+
+  'POST /api/user': (req: Request, res: Response) => {
+    res.status(200).send({
+      res: req.body,
+    });
+  },
 };

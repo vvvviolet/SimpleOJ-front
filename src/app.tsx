@@ -10,7 +10,7 @@ import { currentUser as queryCurrentUser } from './services/SimpleOJ/api';
 
 const isDev = process.env.NODE_ENV === 'development';
 // const isDev = false;
-const loginPath = '/user/login';
+const loginPath = '/common/login';
 
 /** 获取用户信息比较慢的时候会展示一个 loading */
 export const initialStateConfig = {
@@ -27,13 +27,13 @@ export async function getInitialState(): Promise<{
   fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
 }> {
   const token = localStorage.getItem('token');
-  // console.log(token);
+  console.log('app.tsx getInitialState', token);
   const fetchUserInfo = async () => {
     try {
-      const msg = await queryCurrentUser(token ? token : '');
-      // console.log('************');
-      // console.log(msg.data);
-      return msg.data;
+      console.log('app.tsx:31', token);
+      const response = await queryCurrentUser(token ? token : '');
+      console.log('initState', response.data);
+      return response;
     } catch (error) {
       history.push(loginPath);
     }
@@ -59,9 +59,6 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
   return {
     rightContentRender: () => <RightContent />,
     disableContentMargin: false,
-    waterMarkProps: {
-      content: initialState?.currentUser?.name,
-    },
     footerRender: () => <Footer />,
     onPageChange: () => {
       const { location } = history;

@@ -5,8 +5,10 @@
 import * as api from './api';
 import * as login from './login';
 import * as rule from './rule';
+import * as experiment from './experiment';
 export default {
   api,
   login,
   rule,
+  experiment,
 };

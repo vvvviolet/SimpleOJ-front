@@ -1,15 +1,17 @@
 declare namespace API {
   type CurrentUser = {
-    name?: string;
-    avatar?: string;
-    id?: string;
-    email?: string;
-    title: string;
-    role: int;
-    status: int;
-    access?: string;
-    phone?: string;
-    ipv4?: string;
+    data: {
+      id: string;
+      name: string;
+      email: string;
+      role: string;
+      status: number;
+      access: string;
+      phone: string;
+      ipv4: string;
+      token: string;
+    };
+    success: boolean;
   };
 
   type ErrorResponse = {
@@ -39,12 +41,10 @@ declare namespace API {
   };
 
   type LoginResult = {
-    status?: string;
-    type?: string;
-    data?: {
-      user?: CurrentUser;
+    success: boolean;
+    data: {
+      currentAuthority: string;
       token: string;
-      ipv4: string;
     };
   };
 
@@ -103,4 +103,89 @@ declare namespace API {
     /** 页面的容量 */
     pageSize?: number;
   };
+  type postResult = {
+    success: boolean;
+  };
+  // 实验
+  type ExperimentItem = {
+    // 主键
+    title: string;
+    description?: string;
+    publishDate: number;
+    //开始时间
+    startTime: number;
+    status: number;
+    //截止时间
+    endTime?: number;
+  };
+  // 实验列表
+  type ExperimentList = {
+    data?: ExperimentItem[];
+    total?: number;
+    success?: boolean;
+  };
+  //题目
+  type Problem = {
+    // 主键
+    id?: number;
+    name?: boolean;
+    description?: string;
+    filePath?: string;
+    //状态 0 未发布 1 已发布 2 已结束
+    status?: string;
+    //创建时间
+    createTime?: string;
+    //更新时间
+    updateTime?: string;
+    //发布时间
+    distributeTime?: number;
+    //截止时间
+    endTime?: number;
+    //提交次数限制
+    uploadTimesLimit?: string;
+  };
+
+  type ProblemList = {
+    data?: ExperimentItem[];
+    total?: number;
+    success?: boolean;
+  };
+
+  // 用户
+  type User = {
+    name?: string;
+    id: string;
+    email?: string;
+    phone?: string;
+    role: int;
+    status: int;
+    access?: string;
+  };
+  type UserList = {
+    data: User[];
+    total?: number;
+    success?: boolean;
+  };
+  type ExperimentSubmitList = {
+    data: ExperimentSubmit[];
+    total: number;
+    success: boolean;
+  };
+  type ExperimentSubmit = {
+    id: string;
+    title: string;
+    submitTime: string;
+  };
 }
+
+type Notice = {
+  title: string;
+  content: string;
+  publishDate: Date;
+  publisher: string;
+};
+type NoticeList = {
+  data?: Notice[];
+  total?: number;
+  success?: boolean;
+};

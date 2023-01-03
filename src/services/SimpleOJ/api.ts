@@ -4,34 +4,13 @@ import { request } from 'umi';
 
 /** 获取当前的用户 GET /api/currentUser */
 export async function currentUser(token: string) {
-  return request<{
-    data: API.CurrentUser;
-  }>('https://150.158.80.33:7191/api/currentUser', {
+  console.log('currentuser', token);
+  return request<API.CurrentUser>('/api/currentUser', {
     method: 'GET',
     headers: {
-      authorization: 'Bearer ' + token,
+      Authorization: token,
     },
-  });
-}
-
-/** 退出登录接口 POST /api/login/outLogin */
-export async function outLogin(options?: { [key: string]: any }) {
-  return request<Record<string, any>>('/api/login/outLogin', {
-    method: 'POST',
-    ...(options || {}),
-  });
-}
-
-/** 登录接口 POST /api/login/account */
-export async function login(body: API.LoginParams, options?: { [key: string]: any }) {
-  return request<API.LoginResult>('https://150.158.80.33:7191/api/login/account', {
-    // return request<API.LoginResult>('/api/login/account', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: body,
-    ...(options || {}),
+    credentials: 'include', // 默认请求是否带上cookie
   });
 }
 
@@ -43,27 +22,27 @@ export async function getNotices(options?: { [key: string]: any }) {
   });
 }
 
-/** 获取规则列表 GET /api/rule */
-export async function rule(
-  params: {
-    // query
-    /** 当前的页码 */
-    current?: number;
-    /** 页面的容量 */
-    pageSize?: number;
-  },
-  options?: { [key: string]: any },
-) {
-  return request<API.RuleList>('/api/rule', {
-    method: 'GET',
-    params: {
-      ...params,
-    },
-    ...(options || {}),
-  });
-}
+// /** 获取规则列表 GET /api/rule */
+// export async function rule(
+//   params: {
+//     // query
+//     /** 当前的页码 */
+//     current?: number;
+//     /** 页面的容量 */
+//     pageSize?: number;
+//   },
+//   options?: { [key: string]: any },
+// ) {
+//   return request<API.RuleList>('/api/rule', {
+//     method: 'GET',
+//     params: {
+//       ...params,
+//     },
+//     ...(options || {}),
+//   });
+// }
 
-/** 新建规则 PUT /api/rule */
+/** 修改规则 PUT /api/rule */
 export async function updateRule(options?: { [key: string]: any }) {
   return request<API.RuleListItem>('/api/rule', {
     method: 'PUT',
