@@ -18,7 +18,7 @@
     path: '/index',
     name: '主页',
     icon: 'smile',
-    component: './Index',
+    component: './common/Index',
   },
   // {
   //   path: '/experiment',

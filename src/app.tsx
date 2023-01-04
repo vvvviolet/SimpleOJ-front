@@ -20,25 +20,26 @@ export const initialStateConfig = {
 /**
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
  * */
+// const [initialState, getInitalState] = useModel("@@initalState")
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
   currentUser?: API.CurrentUser;
   loading?: boolean;
   fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
 }> {
-  const token = localStorage.getItem('token');
-  console.log('app.tsx getInitialState', token);
   const fetchUserInfo = async () => {
+    const token = localStorage.getItem('token');
+    console.log('fetchUserInfo', token);
     try {
-      console.log('app.tsx:31', token);
       const response = await queryCurrentUser(token ? token : '');
-      console.log('initState', response.data);
-      return response;
+
+      return response.data;
     } catch (error) {
       history.push(loginPath);
     }
     return undefined;
   };
+
   // 如果不是登录页面，执行
   if (history.location.pathname !== loginPath) {
     const currentUser = await fetchUserInfo();

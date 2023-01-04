@@ -28,7 +28,7 @@ const testThree = () => {
 };
 const Login: React.FC = () => {
   const [createAddModalVisible, handleAddModalVisible] = useState<boolean>(false);
-  const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
+  // const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
   const { initialState, setInitialState } = useModel('@@initialState');
   const [loginType, setLoginType] = useState<LoginType>('account');
 
@@ -45,21 +45,23 @@ const Login: React.FC = () => {
 
   const handleSubmit = async (values: API.LoginParams) => {
     try {
-      const msg = await login({ ...values });
-      console.log('login', msg);
-
-      if (msg.success === true) {
-        localStorage.setItem('token', msg.data?.token ? msg.data?.token : '');
-        message.success('登录成功');
-        fetchUserInfo();
+      const response = await login({ ...values });
+      if (response.success === true) {
+        const data = response.data;
+        localStorage.setItem('token', data.token ? data.token : '');
+        // message.success('登录成功');
         await fetchUserInfo();
+        // console.log('setInitialState', data.token);
+        // console.log('现在的用户', initialState?.currentUser);
         if (!history) return;
         const { query } = history.location;
         const { redirect } = query as { redirect: string };
         history.push(redirect || '/');
         return;
       }
-      setUserLoginState(msg);
+
+      // console.log(initialState?.currentUser);
+      // setUserLoginState(msg);
     } catch (error) {
       const defaultLoginFailureMessage = '登录失败，请重试';
       message.error(defaultLoginFailureMessage);

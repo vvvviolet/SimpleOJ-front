@@ -66,8 +66,8 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = () => {
   }
 
   const { currentUser } = initialState;
-  console.log('CURRENT', currentUser);
-  if (!currentUser || !currentUser.data.name) {
+  console.log('curr', currentUser);
+  if (!currentUser || !currentUser.name) {
     return loading;
   }
 
@@ -92,7 +92,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = () => {
           src="https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png"
           alt="avatar"
         />
-        <span className={`${styles.name} anticon`}>{currentUser.data.name}</span>
+        <span className={`${styles.name} anticon`}>{currentUser.name}</span>
       </span>
     </HeaderDropdown>
   );

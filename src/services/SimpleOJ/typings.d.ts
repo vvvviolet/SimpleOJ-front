@@ -1,17 +1,30 @@
 declare namespace API {
-  type CurrentUser = {
+  type LoginParams = {
+    username: string;
+    password: string;
+    autoLogin: boolean;
+    type?: string;
+  };
+
+  type LoginResult = {
+    success: boolean;
     data: {
-      id: string;
-      name: string;
-      email: string;
-      role: string;
-      status: number;
-      access: string;
-      phone: string;
-      ipv4: string;
+      currentAuthority: string;
       token: string;
     };
-    success: boolean;
+    errorMessage: string;
+  };
+
+  type CurrentUser = {
+    id: string;
+    name: string;
+    email: string;
+    role: string;
+    status: number;
+    access: string;
+    phone: string;
+    ip: string;
+    token: string;
   };
 
   type ErrorResponse = {
@@ -20,7 +33,7 @@ declare namespace API {
     /** 业务上的错误信息 */
     errorMessage?: string;
     /** 业务上的请求是否成功 */
-    success?: boolean;
+    success: boolean;
   };
 
   type FakeCaptcha = {
@@ -31,21 +44,6 @@ declare namespace API {
   type getFakeCaptchaParams = {
     /** 手机号 */
     phone?: string;
-  };
-
-  type LoginParams = {
-    username?: string;
-    password?: string;
-    autoLogin?: boolean;
-    type?: string;
-  };
-
-  type LoginResult = {
-    success: boolean;
-    data: {
-      currentAuthority: string;
-      token: string;
-    };
   };
 
   type NoticeIconItem = {

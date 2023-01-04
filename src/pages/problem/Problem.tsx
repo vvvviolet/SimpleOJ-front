@@ -79,7 +79,7 @@ const columns: ProColumns<Problem>[] = [
       // <a href={record.url} target="_blank" rel="noopener noreferrer" key="view">
       <a
         onClick={() => {
-          history.push('/detail');
+          history.push('/problemdetail');
         }}
         target="_blank"
         rel="noopener noreferrer"

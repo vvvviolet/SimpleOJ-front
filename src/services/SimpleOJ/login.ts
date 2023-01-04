@@ -5,7 +5,7 @@ import { request } from 'umi';
 /** 登录接口 POST /api/login/account */
 export async function login(body: API.LoginParams, options?: { [key: string]: any }) {
   // return request<API.LoginResult>('https://150.158.80.33:7191/api/login/account', {
-  return request<API.LoginResult>('/api/login/account', {
+  return request<API.CurrentUser>('/api/login/account', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -32,7 +32,7 @@ export async function currentUser(token: string) {
     // }>('https://150.158.80.33:7191/api/currentUser', {
     method: 'GET',
     headers: {
-      authorization: 'Bearer ' + token,
+      authorization: token,
     },
   });
 }

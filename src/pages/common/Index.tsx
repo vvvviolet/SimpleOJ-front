@@ -13,7 +13,6 @@ import { Statistic } from 'antd';
 import RcResizeObserver from 'rc-resize-observer';
 import { Calendar } from 'antd';
 import Meta from 'antd/lib/card/Meta';
-import { EditOutlined, EllipsisOutlined, SettingOutlined } from '@ant-design/icons';
 import { addNotice } from '@/services/SimpleOJ/notice';
 type NoticeList = {
   data: Notice[];
@@ -24,7 +23,7 @@ const data = ['第二次作业已经发布', '第一次作业ddl：下周三'];
 
 const Welcome: React.FC = () => {
   const { initialState } = useModel('@@initialState');
-  const { notice } = initialState;
+  // const { notice } = initialState;
   const [createAddModalVisible, handleAddModalVisible] = useState<boolean>(false);
   const [noticeList, setNoticeList] = useState<NoticeList>({});
   const [responsive, setResponsive] = useState(false);
@@ -129,17 +128,11 @@ const Welcome: React.FC = () => {
                 </svg>
               </div>
               <Card>
-                <Meta
-                  title="姓名"
-                  description={currentUser?.data?.name ? currentUser?.data?.name : '匿名'}
-                />
-                <Meta
-                  title="学/工号"
-                  description={currentUser?.data?.id ? currentUser?.data?.id : '000001'}
-                />
+                <Meta title="姓名" description={currentUser?.name ? currentUser?.name : '匿名'} />
+                <Meta title="学/工号" description={currentUser?.id ? currentUser?.id : '000001'} />
                 <Meta
                   title="上次登录IP"
-                  description={currentUser?.data.ipv4 ? currentUser?.data.ipv4 : '0.0.0.0'}
+                  description={currentUser?.ip ? currentUser?.ip : '0.0.0.0'}
                 />
               </Card>
             </div>
