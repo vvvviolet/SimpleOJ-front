@@ -1,19 +1,9 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 // import styles from './Welcome.less';
-import { DownOutlined, PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined } from '@ant-design/icons';
 import type { ProColumns } from '@ant-design/pro-components';
-import {
-  ActionType,
-  EditableFormInstance,
-  EditableProTable,
-  PageContainer,
-  ProCard,
-  ProFormField,
-  ProFormInstance,
-  ProFormRadio,
-} from '@ant-design/pro-components';
-import { ProTable } from '@ant-design/pro-components';
-import { Button, Dropdown, Popconfirm, Space } from 'antd';
+import { EditableProTable, PageContainer, ProFormRadio } from '@ant-design/pro-components';
+import { Button } from 'antd';
 import { user, addUser, removeUser } from '@/services/SimpleOJ/user';
 
 const waitTime = (time: number = 100) => {
@@ -199,9 +189,6 @@ const UserList: React.FC = () => {
           type: 'multiple',
           editableKeys,
           onSave: async (rowKey, data, row) => {
-            console.log('rowKey', rowKey);
-            console.log('data', data);
-            console.log('row', row);
             await addUser(data);
           },
           onChange: setEditableRowKeys,

@@ -5,7 +5,7 @@ import { request } from 'umi';
 /** 获取当前的用户 GET /api/currentUser */
 export async function currentUser(token: string) {
   console.log('currentuser', token);
-  return request<API.LoginResult>('/api/currentUser', {
+  return request<API.CurrentUser>('/api/currentUser', {
     method: 'GET',
     headers: {
       Authorization: token,

@@ -6,26 +6,39 @@ import {
   ProFormText,
   ProFormTextArea,
 } from '@ant-design/pro-components';
-import { Button, Card, Divider, List, message, Typography } from 'antd';
-import React, { useState } from 'react';
+import { Button, Card, Divider, List, message } from 'antd';
+import React, { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 import { Statistic } from 'antd';
 import RcResizeObserver from 'rc-resize-observer';
 import { Calendar } from 'antd';
 import Meta from 'antd/lib/card/Meta';
-import { addNotice } from '@/services/SimpleOJ/notice';
-type NoticeList = {
-  data: Notice[];
-  success: boolean;
-  total: number;
+import { addNotice, getNoticeList, getNotice } from '@/services/SimpleOJ/notice';
+function TimestampToDate(Timestamp: number) {
+  const now = new Date(Timestamp);
+  const [y, m, d] = [now.getFullYear(), now.getMonth() + 1, now.getDate()];
+  return (
+    y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d)
+    // ' ' +
+    // now.toTimeString().substring(0, 8)
+  );
+}
+
+const fetchNoticeList = async () => {
+  try {
+    const response = await getNoticeList();
+    console.log('NoticeList', response.data.list);
+    // return response.data.list;
+    return [1, 2, 3];
+  } catch (error) {
+    return;
+  }
 };
-const data = ['第二次作业已经发布', '第一次作业ddl：下周三'];
 
 const Welcome: React.FC = () => {
   const { initialState } = useModel('@@initialState');
   // const { notice } = initialState;
   const [createAddModalVisible, handleAddModalVisible] = useState<boolean>(false);
-  const [noticeList, setNoticeList] = useState<NoticeList>({});
   const [responsive, setResponsive] = useState(false);
   const currentUser = initialState?.currentUser;
   const courseData = [
@@ -61,7 +74,7 @@ const Welcome: React.FC = () => {
       >
         <ProCard
           title=" 基本信息"
-          extra="2022年11月28日"
+          extra={TimestampToDate(Date.now())}
           split={responsive ? 'horizontal' : 'vertical'}
           // bordered
           headerBordered
@@ -128,11 +141,17 @@ const Welcome: React.FC = () => {
                 </svg>
               </div>
               <Card>
-                <Meta title="姓名" description={currentUser?.name ? currentUser?.name : '匿名'} />
-                <Meta title="学/工号" description={currentUser?.id ? currentUser?.id : '000001'} />
+                <Meta
+                  title="姓名"
+                  description={currentUser?.data.name ? currentUser?.data.name : '匿名'}
+                />
+                <Meta
+                  title="学/工号"
+                  description={currentUser?.data.id ? currentUser?.data.id : '000001'}
+                />
                 <Meta
                   title="上次登录IP"
-                  description={currentUser?.ip ? currentUser?.ip : '0.0.0.0'}
+                  description={currentUser?.data.ip ? currentUser?.data.ip : '0.0.0.0'}
                 />
               </Card>
             </div>
@@ -202,7 +221,7 @@ const Welcome: React.FC = () => {
         extra={[
           <Button
             key="add"
-            onClick={() =>
+            onClick={async () =>
               // addNotice({
               //   title: '中文',
               //   description: '中文',
@@ -210,6 +229,13 @@ const Welcome: React.FC = () => {
               //   createTime: '',
               // })
               {
+                try {
+                  const response = await getNoticeList();
+                  console.log(response.data.list);
+                  return response.data.list;
+                } catch (error) {
+                  return;
+                }
                 handleAddModalVisible(true);
               }
             }
@@ -255,10 +281,21 @@ const Welcome: React.FC = () => {
         </ModalForm>
         <List
           bordered
-          dataSource={data}
+          // dataSource={[1, 2, 3]}
+          dataSource={() => [1, 2, 3]}
           renderItem={(item) => (
             <a>
-              <List.Item>{item}</List.Item>
+              <List.Item.Meta
+                title={
+                  <a
+                    onClick={() => {
+                      console.log('查看公告详情');
+                    }}
+                  >
+                    {item}
+                  </a>
+                }
+              />
             </a>
           )}
         />

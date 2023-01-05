@@ -19,13 +19,19 @@ export type GlobalHeaderRightProps = {
 const loginOut = async () => {
   const token = localStorage.getItem('token');
   localStorage.setItem('token', '');
-  await outLogin(token ? token : '');
+  console.log(history.location);
+  try {
+    const response = await outLogin(token ? token : '');
+  } catch (error) {}
   const { query = {}, search, pathname } = history.location;
   const { redirect } = query;
+  console.log(history.location);
+  console.log(redirect);
   // Note: There may be security issues, please note
-  if (window.location.pathname !== '/common/login' && !redirect) {
+  // if (window.location.pathname !== '/login/login' && !redirect) {
+  if (window.location.pathname !== '/login/login') {
     history.replace({
-      pathname: '/common/login',
+      pathname: '/login/login',
       search: stringify({
         redirect: pathname + search,
       }),
@@ -66,8 +72,8 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = () => {
   }
 
   const { currentUser } = initialState;
-  console.log('curr', currentUser);
-  if (!currentUser || !currentUser.name) {
+  // console.log('curr', currentUser);
+  if (!currentUser || !currentUser.data.name) {
     return loading;
   }
 
@@ -92,7 +98,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = () => {
           src="https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png"
           alt="avatar"
         />
-        <span className={`${styles.name} anticon`}>{currentUser.name}</span>
+        <span className={`${styles.name} anticon`}>{currentUser.data.name}</span>
       </span>
     </HeaderDropdown>
   );

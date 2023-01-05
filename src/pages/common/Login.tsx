@@ -12,7 +12,6 @@ import { message, Tabs } from 'antd';
 import React, { useState } from 'react';
 import { history, useModel } from 'umi';
 import styles from './index.less';
-import { Scene } from 'three';
 import { register } from '@/services/SimpleOJ/user';
 
 type LoginType = 'phone' | 'account' | 'reset';
@@ -49,12 +48,13 @@ const Login: React.FC = () => {
       if (response.success === true) {
         const data = response.data;
         localStorage.setItem('token', data.token ? data.token : '');
-        // message.success('登录成功');
+        message.success('登录成功');
         await fetchUserInfo();
-        // console.log('setInitialState', data.token);
-        // console.log('现在的用户', initialState?.currentUser);
+        console.log('history', history);
         if (!history) return;
         const { query } = history.location;
+        console.log('query', query);
+        console.log('history', history.location);
         const { redirect } = query as { redirect: string };
         history.push(redirect || '/');
         return;
@@ -105,11 +105,11 @@ const Login: React.FC = () => {
                   size: 'large',
                   prefix: <UserOutlined className={styles.prefixIcon} />,
                 }}
-                placeholder="用户名"
+                placeholder="学工号"
                 rules={[
                   {
                     required: true,
-                    message: '请输入用户名',
+                    message: '请输入学/工号',
                   },
                 ]}
               />
@@ -138,11 +138,11 @@ const Login: React.FC = () => {
                   size: 'large',
                   prefix: <UserOutlined className={styles.prefixIcon} />,
                 }}
-                placeholder="用户名"
+                placeholder="学工号"
                 rules={[
                   {
                     required: true,
-                    message: '请输入用户名',
+                    message: '请输入学工号',
                   },
                 ]}
               />

@@ -1,26 +1,34 @@
 import { request } from 'umi';
 
-/** 获取当前的公告 GET /api/currenNotice */
-type Notice = {
-  title: string;
-  description: string;
-  publisher: string;
-  createTime: string;
-};
-export async function addNotice(notice: Notice) {
+/** 发布公告 POST /api/notice */
+
+export async function addNotice(notice) {
   return request<API.postResult>('/api/notice', {
     method: 'POST',
-    data: notice,
+    // data: notice,
+    data: {
+      title: '公告1',
+      content: '内容1',
+      publishDate: Date(),
+      publisher: 'cn',
+    },
   });
 }
-/** 发布公告 POST /api/currentNotice */
-export async function currentUser(token: string) {
-  return request<{
-    data: Notice;
-  }>('/api/noticer', {
+
+/* 获取公告列表 */
+export async function getNoticeList() {
+  return request<API.NoticeList>('/api/notice', {
     method: 'GET',
-    headers: {
-      authorization: 'Bearer ' + token,
+  });
+}
+/** 获取公告详情 */
+export async function getNotice() {
+  return request<{
+    data: API.Notice;
+  }>('/api/notice', {
+    method: 'GET',
+    params: {
+      title: '123',
     },
   });
 }

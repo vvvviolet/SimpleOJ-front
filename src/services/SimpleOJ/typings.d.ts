@@ -1,11 +1,12 @@
 declare namespace API {
+  // 前端发送
   type LoginParams = {
-    username: string;
+    id: string;
     password: string;
     autoLogin: boolean;
     type?: string;
   };
-
+  // 后端返回
   type LoginResult = {
     success: boolean;
     data: {
@@ -14,8 +15,8 @@ declare namespace API {
     };
     errorMessage: string;
   };
-
-  type CurrentUser = {
+  // Model定义
+  type User = {
     id: string;
     name: string;
     email: string;
@@ -25,6 +26,12 @@ declare namespace API {
     phone: string;
     ip: string;
     token: string;
+  };
+  // 后端返回
+  type CurrentUser = {
+    success: boolean;
+    errorMessage: string;
+    data: User;
   };
 
   type ErrorResponse = {
@@ -174,16 +181,29 @@ declare namespace API {
     title: string;
     submitTime: string;
   };
-}
 
-type Notice = {
-  title: string;
-  content: string;
-  publishDate: Date;
-  publisher: string;
-};
-type NoticeList = {
-  data?: Notice[];
-  total?: number;
-  success?: boolean;
-};
+  type Notice = {
+    success: boolean;
+    errorMessage: string;
+    data: {
+      title: string;
+      content: string;
+      publishDate: Date;
+      publisher: string;
+    };
+  };
+  type NoticeList = {
+    data: {
+      list: NoticeItem[];
+      total: number;
+    };
+    total: number;
+    success: boolean;
+  };
+  type NoticeItem = {
+    title: string;
+    content: string;
+    publishDate: Date;
+    publisher: string;
+  };
+}

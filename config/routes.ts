@@ -1,11 +1,11 @@
 ﻿export default [
   {
-    path: '/common',
+    path: '/login',
     layout: false,
     routes: [
       {
         name: 'login',
-        path: '/common/login',
+        path: '/login/login',
         component: './common/Login',
       },
 

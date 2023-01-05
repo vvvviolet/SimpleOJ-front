@@ -10,7 +10,7 @@ import { currentUser as queryCurrentUser } from './services/SimpleOJ/api';
 
 const isDev = process.env.NODE_ENV === 'development';
 // const isDev = false;
-const loginPath = '/common/login';
+const loginPath = '/login/login';
 
 /** 获取用户信息比较慢的时候会展示一个 loading */
 export const initialStateConfig = {
@@ -20,7 +20,6 @@ export const initialStateConfig = {
 /**
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
  * */
-// const [initialState, getInitalState] = useModel("@@initalState")
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
   currentUser?: API.CurrentUser;
@@ -32,8 +31,7 @@ export async function getInitialState(): Promise<{
     console.log('fetchUserInfo', token);
     try {
       const response = await queryCurrentUser(token ? token : '');
-
-      return response.data;
+      return response;
     } catch (error) {
       history.push(loginPath);
     }
@@ -41,11 +39,12 @@ export async function getInitialState(): Promise<{
   };
 
   // 如果不是登录页面，执行
+  console.log(history.location.pathname);
   if (history.location.pathname !== loginPath) {
-    const currentUser = await fetchUserInfo();
+    const token = localStorage.getItem('token');
+    const currentUser = await queryCurrentUser(token ? token : '');
     return {
-      fetchUserInfo,
-      currentUser,
+      currentUser: currentUser,
       settings: defaultSettings,
     };
   }
