@@ -22,9 +22,7 @@ const LAYOUT_TYPE_HORIZONTAL = 'horizontal';
 function handleAdd(value: API.User) {
   return true;
 }
-const testThree = () => {
-  return <></>;
-};
+
 const Login: React.FC = () => {
   const [createAddModalVisible, handleAddModalVisible] = useState<boolean>(false);
   // const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});

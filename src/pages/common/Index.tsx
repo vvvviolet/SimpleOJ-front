@@ -6,39 +6,182 @@ import {
   ProFormText,
   ProFormTextArea,
 } from '@ant-design/pro-components';
-import { Button, Card, Divider, List, message } from 'antd';
-import React, { useEffect, useState } from 'react';
+import { Button, Card, Divider, List, message, Modal } from 'antd';
+import React, { createContext, useEffect, useState } from 'react';
 import { useModel } from 'umi';
 import { Statistic } from 'antd';
 import RcResizeObserver from 'rc-resize-observer';
 import { Calendar } from 'antd';
 import Meta from 'antd/lib/card/Meta';
-import { addNotice, getNoticeList, getNotice } from '@/services/SimpleOJ/notice';
+import { addNotice, getNoticeList, removeNotice } from '@/services/SimpleOJ/notice';
 function TimestampToDate(Timestamp: number) {
   const now = new Date(Timestamp);
   const [y, m, d] = [now.getFullYear(), now.getMonth() + 1, now.getDate()];
   return (
-    y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d)
-    // ' ' +
-    // now.toTimeString().substring(0, 8)
+    y +
+    '-' +
+    (m < 10 ? '0' + m : m) +
+    '-' +
+    (d < 10 ? '0' + d : d) +
+    ' ' +
+    now.toTimeString().substring(0, 8)
   );
 }
 
-const fetchNoticeList = async () => {
-  try {
-    const response = await getNoticeList();
-    console.log('NoticeList', response.data.list);
-    // return response.data.list;
-    return [1, 2, 3];
-  } catch (error) {
-    return;
-  }
-};
+const Notice: React.FC = (props) => {
+  const [addModalVisible, handleAddModalVisible] = useState<boolean>(false);
+  const [noticeList, setNoticeList] = useState<API.NoticeItem[]>([]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await getNoticeList();
+      setNoticeList(res.data.list);
+    };
+    fetchData();
+  }, []);
+  return (
+    <>
+      <ProCard
+        title={
+          <>
+            公告
+            {/* <a>更多</a> */}
+          </>
+        }
+        extra={[
+          <Button
+            key="add"
+            onClick={async () => {
+              handleAddModalVisible(true);
+              console.log(props.currentUser.data);
+            }}
+          >
+            新增
+          </Button>,
+        ]}
+      >
+        <Modal
+          title="发布公告"
+          width="800px"
+          open={addModalVisible}
+          onCancel={() => handleAddModalVisible(false)}
+          footer={null}
+        >
+          <ProForm<{
+            title: string;
+            content: string;
+            createTime: string;
+            publisher?: string;
+          }>
+            style={{ marginLeft: 220 }}
+            onFinish={async (values) => {
+              console.log(values);
+              const msg = await addNotice({
+                title: values.title,
+                content: values.content,
+                // publishDate: Date.now(),
+                publishDate: new Date(),
+                publisherId: Number(`${props.currentUser.data.id}`),
+                publisher: `${props.currentUser.data.name}`,
+              });
+              if (msg.success === true) {
+                message.success('发布成功');
+                const fetchData = async () => {
+                  const res = await getNoticeList();
+                  setNoticeList(res.data.list);
+                };
+                fetchData();
+                handleAddModalVisible(false);
+              } else {
+                message.error('发布失败');
+              }
+            }}
+          >
+            <ProFormText
+              name="title"
+              width="md"
+              label="标题"
+              placeholder="请输入标题"
+              rules={[
+                {
+                  required: true,
+                  message: '标题不能为空',
+                },
+              ]}
+            />
+            <ProFormTextArea
+              name="content"
+              width="md"
+              label="内容"
+              placeholder="请输入内容"
+              rules={[
+                {
+                  required: true,
+                  message: '内容不能为空',
+                },
+              ]}
+            />
+          </ProForm>
+        </Modal>
+        <List
+          bordered
+          dataSource={noticeList
+            .sort((x: API.NoticeItem, y: API.NoticeItem) => {
+              return x.publishDate < y.publishDate ? 1 : -1;
+            })
+            .slice(0, 5)}
+          renderItem={(item) => (
+            <List.Item
+              key={item.id}
+              actions={[
+                <text key="date"> {TimestampToDate(new Date(item.publishDate).getTime())}</text>,
+                <a
+                  key="remove"
+                  onClick={async () => {
+                    console.log(item.id);
+                    const msg = await removeNotice(item.id);
+                    if (msg.success === true) {
+                      message.success('删除成功');
+                      const fetchData = async () => {
+                        const res = await getNoticeList();
+                        setNoticeList(res.data.list);
+                      };
+                      fetchData();
+                    } else {
+                      message.error('删除失败');
+                    }
+                  }}
+                >
+                  删除
+                </a>,
+              ]}
+            >
+              <List.Item.Meta
+                title={
+                  <>
+                    <a
+                      onClick={() => {
+                        Modal.info({
+                          title: item.title,
+                          content: <>{item.content}</>,
+                        });
+                      }}
+                    >
+                      {item.title}
+                    </a>
+                  </>
+                }
+              />
+            </List.Item>
+          )}
+        />
+      </ProCard>
+    </>
+  );
+};
 const Welcome: React.FC = () => {
   const { initialState } = useModel('@@initialState');
-  // const { notice } = initialState;
-  const [createAddModalVisible, handleAddModalVisible] = useState<boolean>(false);
+
   const [responsive, setResponsive] = useState(false);
   const currentUser = initialState?.currentUser;
   const courseData = [
@@ -216,90 +359,7 @@ const Welcome: React.FC = () => {
           </ProCard>
         </ProCard.Group>
       </RcResizeObserver>
-      <ProCard
-        title="公告"
-        extra={[
-          <Button
-            key="add"
-            onClick={async () =>
-              // addNotice({
-              //   title: '中文',
-              //   description: '中文',
-              //   publisher: 'cn',
-              //   createTime: '',
-              // })
-              {
-                try {
-                  const response = await getNoticeList();
-                  console.log(response.data.list);
-                  return response.data.list;
-                } catch (error) {
-                  return;
-                }
-                handleAddModalVisible(true);
-              }
-            }
-          >
-            新增
-          </Button>,
-        ]}
-      >
-        <ModalForm
-          title="发布公告"
-          width="800px"
-          visible={createAddModalVisible}
-          onVisibleChange={handleAddModalVisible}
-          onFinish={async (value) => {
-            console.log(value);
-            // const success = await handleAdd(value as API.User);
-            // if (success) {
-            //   handleAddModalVisible(false);
-            // }
-          }}
-        >
-          <ProForm<{
-            title: string;
-            description: string;
-            createTime: string;
-            publisher?: string;
-          }>
-            style={{ marginLeft: 220 }}
-            onFinish={async (values) => {
-              console.log(values);
-              const msg = await addNotice({ ...values, publisher: 'cn' });
-              console.log(msg);
-              if (msg.success === true) {
-                message.success('发布成功');
-              } else {
-                message.error('发布失败');
-              }
-            }}
-          >
-            <ProFormText name="title" width="md" label="标题" placeholder="请输入标题" />
-            <ProFormTextArea name="description" width="md" label="内容" placeholder="请输入内容" />
-          </ProForm>
-        </ModalForm>
-        <List
-          bordered
-          // dataSource={[1, 2, 3]}
-          dataSource={() => [1, 2, 3]}
-          renderItem={(item) => (
-            <a>
-              <List.Item.Meta
-                title={
-                  <a
-                    onClick={() => {
-                      console.log('查看公告详情');
-                    }}
-                  >
-                    {item}
-                  </a>
-                }
-              />
-            </a>
-          )}
-        />
-      </ProCard>
+      <Notice currentUser={currentUser} />
     </PageContainer>
   );
 };

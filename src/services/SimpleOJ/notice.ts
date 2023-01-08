@@ -5,13 +5,10 @@ import { request } from 'umi';
 export async function addNotice(notice) {
   return request<API.postResult>('/api/notice', {
     method: 'POST',
+    // headers: { 'Content-Type': 'multipart/form-data' },
+
     // data: notice,
-    data: {
-      title: '公告1',
-      content: '内容1',
-      publishDate: Date(),
-      publisher: 'cn',
-    },
+    data: notice,
   });
 }
 
@@ -30,5 +27,11 @@ export async function getNotice() {
     params: {
       title: '123',
     },
+  });
+}
+/** 删除公告 */
+export async function removeNotice(id: number) {
+  return request('/api/notice/' + `${id}`, {
+    method: 'DELETE',
   });
 }

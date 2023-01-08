@@ -186,6 +186,7 @@ declare namespace API {
     success: boolean;
     errorMessage: string;
     data: {
+      id: number;
       title: string;
       content: string;
       publishDate: Date;
@@ -201,6 +202,7 @@ declare namespace API {
     success: boolean;
   };
   type NoticeItem = {
+    id: number;
     title: string;
     content: string;
     publishDate: Date;

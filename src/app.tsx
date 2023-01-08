@@ -1,9 +1,10 @@
 import Footer from '@/components/Footer';
 import RightContent from '@/components/RightContent';
 import { BookOutlined, LinkOutlined } from '@ant-design/icons';
-import type { Settings as LayoutSettings } from '@ant-design/pro-components';
+import type { RequestOptionsType, Settings as LayoutSettings } from '@ant-design/pro-components';
 import { PageLoading, SettingDrawer } from '@ant-design/pro-components';
-import type { RunTimeLayoutConfig } from 'umi';
+import { notification } from 'antd';
+import type { RequestConfig, RunTimeLayoutConfig } from 'umi';
 import { history, Link } from 'umi';
 import defaultSettings from '../config/defaultSettings';
 import { currentUser as queryCurrentUser } from './services/SimpleOJ/api';
@@ -39,7 +40,7 @@ export async function getInitialState(): Promise<{
   };
 
   // 如果不是登录页面，执行
-  console.log(history.location.pathname);
+  // console.log(history.location.pathname);
   if (history.location.pathname !== loginPath) {
     const token = localStorage.getItem('token');
     const currentUser = await queryCurrentUser(token ? token : '');
@@ -106,4 +107,30 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     },
     ...initialState?.settings,
   };
+};
+
+const errorHandler = (error: ResponseError) => {
+  notification.error({
+    description: '您的网络连接发生异常，无法连接至服务器',
+    message: '网络异常',
+  });
+};
+
+const authHeaderInterceptor = (url: string, options: RequestOptionsType) => {
+  const token = localStorage.getItem('token');
+  if (token !== null) {
+    const authHeader = { Authorization: '2052538' };
+    return {
+      url: url,
+      options: { ...options, interceptors: true, headers: authHeader },
+    };
+  }
+  return {
+    url: url,
+    options: { ...options, interceptors: true },
+  };
+};
+export const request: RequestConfig = {
+  errorHandler,
+  authHeaderInterceptor,
 };
