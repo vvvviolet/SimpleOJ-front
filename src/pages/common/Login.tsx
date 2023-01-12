@@ -19,7 +19,7 @@ type LoginType = 'phone' | 'account' | 'reset';
 type LayoutType = Parameters<typeof ProForm>[0]['layout'];
 const LAYOUT_TYPE_HORIZONTAL = 'horizontal';
 
-function handleAdd(value: API.User) {
+function handleAdd(value: API.UserItem) {
   return true;
 }
 
@@ -198,8 +198,6 @@ const Login: React.FC = () => {
               注册
             </a>
           </div>
-          {/* <bufferGeometry attach="geometry"></bufferGeometry> */}
-
           <ModalForm
             title="注册"
             width="800px"

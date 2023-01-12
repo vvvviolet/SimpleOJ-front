@@ -217,7 +217,7 @@ const Welcome: React.FC = () => {
       >
         <ProCard
           title=" 基本信息"
-          extra={TimestampToDate(Date.now())}
+          extra={TimestampToDate(Date.now()).slice(0, 10)}
           split={responsive ? 'horizontal' : 'vertical'}
           // bordered
           headerBordered

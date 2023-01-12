@@ -9,11 +9,18 @@ export async function user(options?: { [key: string]: any }) {
     ...(options || {}),
   });
 }
-/** 新建规则 POST /api/user */
-export async function addUser(userData, options?: { [key: string]: any }) {
-  console.log(userData);
-  return request<API.RuleListItem>('/api/user', {
+/** 新建用户 POST /api/user */
+export async function addUser(userData: API.UserItem, options?: { [key: string]: any }) {
+  return request<API.PostResult>('/api/user', {
     method: 'POST',
+    data: userData,
+    ...(options || {}),
+  });
+}
+/** 更新用户 PATCH /api/user */
+export async function updateUser(userData, options?: { [key: string]: any }) {
+  return request<API.PostResult>(`/api/user/${userData.id}`, {
+    method: 'PATCH',
     data: userData,
     ...(options || {}),
   });
@@ -21,11 +28,11 @@ export async function addUser(userData, options?: { [key: string]: any }) {
 /** 新建规则 DELETE /api/user */
 export async function removeUser(userId: string, options?: { [key: string]: any }) {
   console.log(userId);
-  return request<API.postResult>('/api/user', {
+  return request<API.postResult>(`/api/user/${userId}`, {
     method: 'DELETE',
-    params: {
-      id: userId,
-    },
+    // params: {
+    //   id: userId,
+    // },
     ...(options || {}),
   });
 }

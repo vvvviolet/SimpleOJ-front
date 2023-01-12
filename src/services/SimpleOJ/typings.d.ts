@@ -16,24 +16,41 @@ declare namespace API {
     errorMessage: string;
   };
   // Model定义
-  type User = {
+  type UserItem = {
     id: string;
     name: string;
     email: string;
-    role: string;
-    status: number;
-    access: string;
     phone: string;
+    role: number;
+    status: number;
+    password: string;
+    create_time?: string;
+    update_time?: string;
+    last_login_time?: string;
+    access: string;
     ip: string;
-    token: string;
   };
   // 后端返回
   type CurrentUser = {
     success: boolean;
     errorMessage: string;
-    data: User;
+    data: UserItem;
   };
 
+  type UserList = {
+    data: {
+      list: UserItem[];
+      current?: number;
+      pageSize?: number;
+      total?: number;
+    };
+    errorCode: string;
+    errorMessage: string;
+    showType: number;
+    traceId: string;
+    host: string;
+    success: boolean;
+  };
   type ErrorResponse = {
     /** 业务约定的错误码 */
     errorCode: string;
@@ -108,7 +125,7 @@ declare namespace API {
     /** 页面的容量 */
     pageSize?: number;
   };
-  type postResult = {
+  type PostResult = {
     success: boolean;
   };
   // 实验
@@ -125,52 +142,48 @@ declare namespace API {
   };
   // 实验列表
   type ExperimentList = {
-    data?: ExperimentItem[];
-    total?: number;
-    success?: boolean;
+    data: {
+      list: ExperimentItem[];
+      current?: number;
+      pageSize?: number;
+      total?: number;
+    };
+    errorCode: string;
+    errorMessage: string;
+    showType: number;
+    traceId: string;
+    host: string;
+    success: boolean;
   };
   //题目
-  type Problem = {
-    // 主键
+  type ProblemItem = {
     id?: number;
     name?: boolean;
     description?: string;
     filePath?: string;
-    //状态 0 未发布 1 已发布 2 已结束
     status?: string;
-    //创建时间
     createTime?: string;
-    //更新时间
     updateTime?: string;
-    //发布时间
     distributeTime?: number;
-    //截止时间
     endTime?: number;
-    //提交次数限制
     uploadTimesLimit?: string;
   };
 
   type ProblemList = {
-    data?: ExperimentItem[];
-    total?: number;
-    success?: boolean;
+    data: {
+      list: ProblemItem[];
+      current?: number;
+      pageSize?: number;
+      total?: number;
+    };
+    errorCode: string;
+    errorMessage: string;
+    showType: number;
+    traceId: string;
+    host: string;
+    success: boolean;
   };
 
-  // 用户
-  type User = {
-    name?: string;
-    id: string;
-    email?: string;
-    phone?: string;
-    role: int;
-    status: int;
-    access?: string;
-  };
-  type UserList = {
-    data: User[];
-    total?: number;
-    success?: boolean;
-  };
   type ExperimentSubmitList = {
     data: ExperimentSubmit[];
     total: number;

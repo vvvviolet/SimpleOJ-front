@@ -102,7 +102,7 @@
       {
         path: '/admin/user',
         name: '用户管理',
-        component: './UserManage',
+        component: './admin/User',
       },
       {
         path: '/admin/system',
