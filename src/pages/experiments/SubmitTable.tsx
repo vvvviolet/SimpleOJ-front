@@ -1,16 +1,12 @@
 import { getExperimentSubmit } from '@/services/SimpleOJ/experiment';
 import { TimestampToDate } from '@/utils/time';
 import type { ProColumns } from '@ant-design/pro-components';
-import { idIDIntl, PageContainer } from '@ant-design/pro-components';
+import { PageContainer } from '@ant-design/pro-components';
 import { EditableProTable, ProCard, ProFormField } from '@ant-design/pro-components';
 import React, { useState } from 'react';
 import { request, useParams } from 'umi';
-import RcResizeObserver from 'rc-resize-observer';
 import { Button } from 'antd';
 
-// export default () => {
-//   return <>id 姓名 状态（已提交 未提交） 提交 首次提交时间  最终提交时间 得分</>;
-// };
 const waitTime = (time: number = 100) => {
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -18,45 +14,42 @@ const waitTime = (time: number = 100) => {
     }, time);
   });
 };
-function download(params) {
-  return request<Record<string, any>>('/api/experiment/submit/file', {
-    params: params,
-  });
-}
+
 export default () => {
   const [editableKeys, setEditableRowKeys] = useState<React.Key[]>([]);
-  const [dataSource, setDataSource] = useState<API.ExperimentSubmit[]>([]);
-  const [position, setPosition] = useState<'top' | 'bottom' | 'hidden'>('bottom');
-  const params: { id: string } | undefined = useParams();
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const res = await getExperimentSubmit(params.id);
-  //     if(res.success===true){
-
-  //     }
-  //   };
-  // }, []);
-  // "studentId": 1,
-  // "studentName": "name1",
-  // "deadline": null,
-  // "firstSubmitTime": 1673713623261,
-  // "lastSubmitTime": null
-  const columns: ProColumns<API.ExperimentSubmit>[] = [
+  const [dataSource, setDataSource] = useState<API.ExperimentSubmitItem[]>([]);
+  const pageParams: { id: string } | undefined = useParams();
+  const columns: ProColumns<API.ExperimentSubmitItem>[] = [
+    {
+      dataIndex: 'index',
+      valueType: 'indexBorder',
+      hideInSearch: true,
+      editable: false,
+      width: 48,
+    },
     {
       title: '学号',
       dataIndex: 'studentId',
+      hideInSearch: true,
+
+      sorter: (a, b) => Number(a.studentId) - Number(b.studentId),
       editable: false,
     },
     {
       title: '姓名',
       dataIndex: 'studentName',
+      hideInSearch: true,
+
       editable: false,
     },
 
     {
       title: '截止时间',
       dataIndex: 'deadline',
+      hideInSearch: true,
+
       editable: false,
+      sorter: (a, b) => Number(a.deadline) - Number(b.deadline),
       render: (record, entity) => {
         return TimestampToDate(Number(entity.deadline));
       },
@@ -64,8 +57,11 @@ export default () => {
 
     {
       title: '最后提交时间',
+      hideInSearch: true,
+
       dataIndex: 'lastSubmitTime',
       editable: false,
+      sorter: (a, b) => Number(a.lastSubmitTime) - Number(b.lastSubmitTime),
       render: (record, entity) => {
         return TimestampToDate(Number(entity.lastSubmitTime));
       },
@@ -85,42 +81,28 @@ export default () => {
     {
       title: '评分',
       dataIndex: 'score',
+      hideInSearch: true,
+
       valueType: 'digit',
+      sorter: (a, b) => Number(a.score) - Number(b.score),
+
       fieldProps: {
         mode: 'multiple',
       },
-      request: async () =>
-        ['A', 'B', 'D', 'E', 'F'].map((item, index) => ({
-          label: item,
-          value: index,
-        })),
-      // valueType: 'string',
     },
     {
       title: '操作',
+      key: 'option',
+      width: 120,
       valueType: 'option',
-
-      // valueType: 'number',
-      render: (text, record, _, action) => [
+      render: (_, row, index, action) => [
         <a
-          key="editable"
+          key="a"
           onClick={() => {
-            console.log(record);
-            action?.startEditable?.(record.studentId);
+            action?.startEditable(row.id);
           }}
         >
-          编辑{' '}
-        </a>,
-        <a
-          key="get"
-          onClick={() => {
-            console.log(record);
-            const res = download(record);
-            console.log(res);
-            // setDataSource(dataSource.filter((item) => item.id !== record.id));
-          }}
-        >
-          下载
+          编辑
         </a>,
       ],
     },
@@ -128,7 +110,7 @@ export default () => {
 
   return (
     <>
-      <PageContainer title={`实验${params?.id}提交情况`}>
+      <PageContainer title={`实验${pageParams?.id}提交情况`}>
         <ProCard
           title=""
           style={{ paddingLeft: '20px' }}
@@ -148,18 +130,24 @@ export default () => {
           // bordered
           headerBordered
         >
-          <EditableProTable<API.ExperimentSubmit>
+          <EditableProTable<API.ExperimentSubmitItem, API.PageParams>
             rowKey="id"
-            headerTitle="提交情况"
+            headerTitle=""
+            search={{
+              labelWidth: 'auto',
+            }}
             maxLength={5}
             scroll={{
               x: 960,
             }}
+            pagination={true}
             recordCreatorProps={false}
             loading={false}
             columns={columns}
-            request={async () => {
-              const res = await getExperimentSubmit(params.id);
+            request={async (params: API.PageParams & { pageSize: number; current: number }) => {
+              const res = await getExperimentSubmit(
+                pageParams?.id !== undefined ? pageParams?.id : '1',
+              );
               return {
                 success: res.success,
                 total: res.data.total,
@@ -172,7 +160,7 @@ export default () => {
               editableKeys,
               onSave: async (rowKey, data, row) => {
                 console.log(rowKey, data, row);
-                await waitTime(2000);
+                await waitTime(1000);
               },
               onChange: setEditableRowKeys,
             }}

@@ -51,7 +51,8 @@ export default {
     const experimentSubmitList = new Array();
     for (let i = 1; i < 55; i++) {
       experimentSubmitList.push({
-        studentId: i,
+        id: i,
+        studentId: `20000${i}`,
         studentName: `学生${i}`,
         deadline: Date.now() + 1000000000,
         firstSubmitTime: Date.now(),

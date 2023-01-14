@@ -7,6 +7,7 @@ import {
   ProCard,
   ProForm,
   ProFormDateRangePicker,
+  ProFormDateTimeRangePicker,
 } from '@ant-design/pro-components';
 import RcResizeObserver from 'rc-resize-observer';
 import { ProFormText } from '@ant-design/pro-components';
@@ -16,6 +17,7 @@ import { InboxOutlined } from '@ant-design/icons';
 import { addExperiment } from '@/services/SimpleOJ/experiment';
 import type { RcFile } from 'antd/lib/upload';
 import { useModel } from 'umi';
+import { TimestampToDate } from '@/utils/time';
 
 const DetailEdit: React.FC = () => {
   const [content, setContent] = useState(BraftEditor.createEditorState(null));
@@ -86,19 +88,25 @@ const DetailEdit: React.FC = () => {
                 initialValues={{
                   title: '',
                   content: '',
-                  dateTimeRange: [Date.now(), Date.now() + 1000 * 60 * 60 * 24 * 7],
+                  dateTimeRange: [Date.now(), Date.now() + 1000 * 86400],
                 }}
                 onFinish={async (values) => {
                   // await waitTime(1000);
                   const nullFile = new Blob();
                   const formData = new FormData();
-                  // console.log(TimestampToDate(values.dateTimeRange[0]));
                   formData.append('title', values.title);
-                  console.log(values.content.toHTML());
+                  // console.log(values.content.toHTML())
+                  // console.log(values.dateTimeRange[0], values.dateTimeRange[1]);
+                  const startTimeStamp = new Date(
+                    values.dateTimeRange[0].replace(' ', 'T'),
+                  ).getTime();
+                  const endTimeStamp = new Date(
+                    values.dateTimeRange[1].replace(' ', 'T'),
+                  ).getTime();
                   formData.append('description', values.content.toHTML());
                   formData.append('publishTime', Date.now().toString());
-                  formData.append('startTime', values.dateTimeRange[0]);
-                  formData.append('endTime', values.dateTimeRange[1]);
+                  formData.append('startTime', startTimeStamp.toString());
+                  formData.append('endTime', endTimeStamp.toString());
                   formData.append(
                     'publisher',
                     currentUser?.data.name === undefined ? '' : currentUser?.data.name,
@@ -122,7 +130,7 @@ const DetailEdit: React.FC = () => {
                   ]}
                 />
 
-                <ProFormDateRangePicker
+                <ProFormDateTimeRangePicker
                   name="dateTimeRange"
                   label="起止日期"
                   fieldProps={{

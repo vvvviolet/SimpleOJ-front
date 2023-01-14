@@ -166,10 +166,12 @@ declare namespace API {
     host: string;
     success: boolean;
   };
-  type ExperimentSubmit = {
+  type ExperimentSubmitItem = {
+    id: number;
     studentId: string;
     studentName: string;
     deadline: string;
+    score?: number;
     firstSubmitTime: string;
     lastSubmitTime: string;
   };

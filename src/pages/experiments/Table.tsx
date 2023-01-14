@@ -56,7 +56,7 @@ const TeacherTable: React.FC = () => {
       sorter: (a, b) => a.endTime - b.endTime,
       hideInSearch: true,
       render: (_, entity) => {
-        return TimestampToDate(entity.endTime).substring(0, 10);
+        return TimestampToDate(entity.endTime).substring(0, 10) + ' 23:59:59';
       },
     },
     {
