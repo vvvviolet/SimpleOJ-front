@@ -1,4 +1,3 @@
-import initialState from '@/.umi/plugin-initial-state/models/initialState';
 import {
   addExperiment,
   removeExperiment,
@@ -7,7 +6,10 @@ import {
   getExperimentDetail,
 } from '@/services/SimpleOJ/experiment';
 import { PlusOutlined } from '@ant-design/icons';
-import type { ActionType } from '@ant-design/pro-components';
+import type {
+  ActionType,
+  ProColumns,
+  ProDescriptionsItemProps} from '@ant-design/pro-components';
 import {
   FooterToolbar,
   PageContainer,
@@ -17,7 +19,6 @@ import {
 import { Button, Drawer, message, Upload } from 'antd';
 import React, { useRef, useState } from 'react';
 import { history } from 'umi';
-import UpdateForm from './Experiment/components/Form';
 type FormValueType = {
   name?: string;
   startTime?: string;
@@ -90,18 +91,10 @@ const handleRemove = async (selectedRows: API.ExperimentItem[]) => {
     return false;
   }
 };
-function download(params) {
-  return request<Record<string, any>>('/api/experiment/submit/file', {
-    params: params,
-  });
-}
+
 const handleDownload = async (e: any) => {};
 
-const StudentTable: React.FC = () => {
-  /**
-   * @en-US The pop-up window of the distribution update window
-   * @zh-CN 分布更新窗口的弹窗
-   * */
+const TeacherTable: React.FC = () => {
   const [updateModalVisible, handleUpdateModalVisible] = useState<boolean>(false);
 
   const [showDetail, setShowDetail] = useState<boolean>(false);
@@ -155,37 +148,13 @@ const StudentTable: React.FC = () => {
       hideInForm: true,
     },
     {
-      title: '首次提交时间',
-      dataIndex: 'firstSubmitTime',
+      title: '发布时间',
+      dataIndex: 'publishTime',
       sorter: true,
       hideInSearch: true,
 
       hideInForm: true,
     },
-    {
-      title: '最后提交时间',
-      dataIndex: 'lastSubmitTime',
-      sorter: true,
-      hideInSearch: true,
-
-      hideInForm: true,
-    },
-    // {
-    //   title: '状态',
-    //   dataIndex: 'status',
-    //   hideInForm: true,
-    //   default: 0,
-    //   valueEnum: {
-    //     0: {
-    //       text: '未提交',
-    //       status: 'Default',
-    //     },
-    //     1: {
-    //       text: '已提交',
-    //       status: 'Success',
-    //     },
-    //   },
-    // },
     {
       title: '操作',
       dataIndex: 'option',
@@ -194,46 +163,27 @@ const StudentTable: React.FC = () => {
 
       render: (text, record, _, action) => [
         <a
-          key="download"
+          key="config"
           onClick={() => {
-            console.log(record);
-            const res = download(record);
-            console.log(res);
-
-            // setDataSource(dataSource.filter((item) => item.id !== record.id));
+            alert('查看提交');
           }}
         >
-          查看提交
+          查看
         </a>,
-        <Upload
-          key="submit"
-          name="upload"
-          maxCount={1}
-          itemRender={() => {}}
-          // listType="picture"
-          // 阻止文件的上传 待点击提交按钮的时候一次性上传
-          beforeUpload={async (info) => {
-            console.log(info);
+
+        <a
+          key="actionGroup"
+          onClick={async () => {
+            // console.log(text, record, action);
+            console.log(record.title);
             const formData = new FormData();
-            formData.append('id', '2052538');
             formData.append('title', record.title);
-            formData.append('timeStamp', Date.now().toString());
-            formData.append('file', info);
-            console.log(formData);
-            try {
-              const response = await submitExperiment(formData);
-              if (response?.success === true) {
-                message.success('上传成功');
-                // history.goBack();
-              }
-            } catch (error) {
-              message.error('上传失败，请重试！');
-            }
-            return true;
+            await removeExperiment(formData);
+            action?.reload();
           }}
         >
-          <a>上传</a>
-        </Upload>,
+          删除
+        </a>,
       ],
     },
   ];
@@ -245,6 +195,18 @@ const StudentTable: React.FC = () => {
         actionRef={actionRef}
         rowKey="id"
         search={false}
+        toolBarRender={() => [
+          <Button
+            type="primary"
+            key="primary"
+            onClick={() => {
+              history.push('/detailEdit');
+            }}
+          >
+            <PlusOutlined />
+            新增
+          </Button>,
+        ]}
         request={() => experiment({ current: 1, pageSize: 10 })}
         columns={columns}
         rowSelection={{
@@ -275,7 +237,7 @@ const StudentTable: React.FC = () => {
         </FooterToolbar>
       )}
 
-      <UpdateForm
+      <ProTable
         onSubmit={async (value) => {
           const success = await handleUpdate(value);
           if (success) {
@@ -323,4 +285,4 @@ const StudentTable: React.FC = () => {
   );
 };
 
-export default StudentTable;
+export default TeacherTable;

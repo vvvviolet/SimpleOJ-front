@@ -15,8 +15,8 @@ import {
 } from '@ant-design/pro-components';
 import { Button, Drawer, message, Upload } from 'antd';
 import React, { useRef, useState } from 'react';
-import type { FormValueType } from './components/Form';
-import UpdateForm from './components/Form';
+// import type { FormValueType } from './components/Form';
+// import UpdateForm from './components/Form';
 import { history } from 'umi';
 
 /**
@@ -130,21 +130,6 @@ const TableList: React.FC = () => {
 
       hideInForm: true,
     },
-    // {
-    //   title: '状态',
-    //   dataIndex: 'status',
-    //   hideInForm: true,
-    //   valueEnum: {
-    //     0: {
-    //       text: '未提交',
-    //       status: 'Default',
-    //     },
-    //     1: {
-    //       text: '已提交',
-    //       status: 'Success',
-    //     },
-    //   },
-    // },
     {
       title: '操作',
       dataIndex: 'option',
@@ -225,7 +210,8 @@ const TableList: React.FC = () => {
             新增
           </Button>,
         ]}
-        request={() => experiment({ current: 1, pageSize: 10 })}
+        // request={() => experiment({ current: 1, pageSize: 10 })}
+        request={() => Promise.resolve({})}
         columns={columns}
         rowSelection={{
           onChange: (_, selectedRows) => {
@@ -255,7 +241,7 @@ const TableList: React.FC = () => {
         </FooterToolbar>
       )}
 
-      <UpdateForm
+      <ProTable
         onSubmit={async (value) => {
           const success = await handleUpdate(value);
           if (success) {

@@ -28,7 +28,7 @@ export async function updateUser(userData, options?: { [key: string]: any }) {
 /** 新建规则 DELETE /api/user */
 export async function removeUser(userId: string, options?: { [key: string]: any }) {
   console.log(userId);
-  return request<API.postResult>(`/api/user/${userId}`, {
+  return request<API.PostResult>(`/api/user/${userId}`, {
     method: 'DELETE',
     // params: {
     //   id: userId,
@@ -38,7 +38,7 @@ export async function removeUser(userId: string, options?: { [key: string]: any 
 }
 /* 注册 POST /api/register */
 export async function register(data, options?: { [key: string]: any }) {
-  return request<API.postResult>('/api/register', {
+  return request<API.PostResult>('/api/register', {
     method: 'POST',
     data: data,
     ...(options || {}),

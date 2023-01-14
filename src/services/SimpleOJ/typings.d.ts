@@ -24,7 +24,7 @@ declare namespace API {
     role: number;
     status: number;
     password: string;
-    create_time?: string;
+    create_time: string;
     update_time?: string;
     last_login_time?: string;
     access: string;
@@ -130,7 +130,7 @@ declare namespace API {
   };
   // 实验
   type ExperimentItem = {
-    // 主键
+    id: string;
     title: string;
     description?: string;
     publishDate: number;

@@ -2,12 +2,9 @@ import { request } from 'umi';
 
 /** 发布公告 POST /api/notice */
 
-export async function addNotice(notice) {
-  return request<API.postResult>('/api/notice', {
+export async function addNotice(notice: unknown) {
+  return request<API.PostResult>('/api/notice', {
     method: 'POST',
-    // headers: { 'Content-Type': 'multipart/form-data' },
-
-    // data: notice,
     data: notice,
   });
 }

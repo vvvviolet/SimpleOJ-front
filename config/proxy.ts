@@ -12,10 +12,7 @@ export default {
     // '/api/': {
     '/api/': {
       // 要代理的地址
-      // target: 'http://124.223.95.200',
       target: 'http://119.3.154.46:3000/',
-      // target: 'http://93f31a4a3b2e5610.natapp.cc:1230',
-      // target: 'http://41083a61b7332265.natapp.cc:44443',
       // 配置了这个可以从 http 代理到 https
       // 依赖 origin 的功能可能需要这个，比如 cookie
       changeOrigin: true,
@@ -27,10 +24,6 @@ export default {
     '/api/': {
       // 要代理的地址
       target: 'http://119.3.154.46:3000/',
-      // target: 'http://93f31a4a3b2e5610.natapp.cc:1230',
-
-      // target: 'http://41083a61b7332265.natapp.cc:44443',
-      // target: 'http://124.223.95.200',
       // 配置了这个可以从 http 代理到 https
       // 依赖 origin 的功能可能需要这个，比如 cookie
       changeOrigin: true,

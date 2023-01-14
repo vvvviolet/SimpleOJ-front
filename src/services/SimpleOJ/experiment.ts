@@ -15,17 +15,16 @@ export async function experiment(
 ) {
   return request<API.ExperimentList>('/api/experiment', {
     method: 'GET',
-    params: {
-      ...params,
-    },
+    // params: {
+    //   ...params,
+    // },
     ...(options || {}),
   });
 }
 
 /** 新建实验项目 POST /api/experiment **/
 export async function addExperiment(formData: FormData, options?: { [key: string]: any }) {
-  // return request<API.ExperimentItem>('/api/experiment', {
-  return request<API.postResult>('/api/experiment/publish', {
+  return request<API.PostResult>('/api/experiment/publish', {
     method: 'POST',
     data: formData,
     ...(options || {}),
@@ -34,7 +33,7 @@ export async function addExperiment(formData: FormData, options?: { [key: string
 
 /** 提交实验项目 POST /api/experiment/submit **/
 export async function submitExperiment(formData: FormData, options?: { [key: string]: any }) {
-  return request<API.postResult>('/api/experiment/submit', {
+  return request<API.PostResult>('/api/experiment/submit', {
     method: 'POST',
     // data: formData,
     data: formData,

@@ -1,14 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 // import styles from './Welcome.less';
 import { PlusOutlined } from '@ant-design/icons';
-import type {
-  ProColumns} from '@ant-design/pro-components';
-import {
-  ActionType,
-  ProFormRadio,
-  ProCard,
-  ProFormField,
-} from '@ant-design/pro-components';
+import type { ProColumns, ProFormInstance } from '@ant-design/pro-components';
+import { ActionType, ProFormRadio, ProCard, ProFormField } from '@ant-design/pro-components';
 import { EditableProTable, PageContainer } from '@ant-design/pro-components';
 import { Button, Form, Input, InputRef, message, Space, Tag } from 'antd';
 import { user, addUser, removeUser, updateUser } from '@/services/SimpleOJ/user';
@@ -28,6 +22,8 @@ const UserList: React.FC = () => {
   const [dataSource, setDataSource] = useState<API.UserItem[]>([]);
   const [position, setPosition] = useState<'top' | 'bottom' | 'hidden'>('top');
   const [isEdit, setEdit] = useState(false);
+  const formRef = useRef<ProFormInstance<API.UserItem>>();
+
   useEffect(() => {
     const fetchData = async () => {
       const res = await user();
@@ -42,7 +38,7 @@ const UserList: React.FC = () => {
 
       formItemProps: (form, { rowIndex }) => {
         return {
-          rules: rowIndex > 1 ? [{ required: true, message: '此项为必填项' }] : [],
+          rules: [{ required: true, message: '此项为必填项' }],
         };
       },
       width: '15%',
@@ -55,11 +51,17 @@ const UserList: React.FC = () => {
       title: '姓名',
       dataIndex: 'name',
       width: '15%',
-      // sorter: (a, b) => a.name - b.name,
+      initialValue: '王小二',
+      formItemProps: (form, { rowIndex }) => {
+        return {
+          rules: [{ required: true, message: '此项为必填项' }],
+        };
+      },
     },
     {
       title: '邮箱',
       dataIndex: 'email',
+      initialValue: 'test@qq.com',
     },
     {
       title: '手机号',
@@ -77,6 +79,7 @@ const UserList: React.FC = () => {
         }
         return {};
       },
+      initialValue: '0136-14135772',
     },
     {
       title: '角色',
@@ -88,6 +91,11 @@ const UserList: React.FC = () => {
         2: { text: '教师' },
         3: { text: '助教' },
       },
+      initialValue: 1,
+      renderText(text, record, index, action) {
+        console.log(text, '*', record);
+        return text;
+      },
     },
     {
       title: '状态',
@@ -97,6 +105,7 @@ const UserList: React.FC = () => {
         1: { text: '已激活', status: 'Success' },
         0: { text: '未激活', status: 'Default' },
       },
+      initialValue: 0,
     },
     {
       title: '创建日期',
@@ -106,6 +115,9 @@ const UserList: React.FC = () => {
         const create_time = dom?.toString();
         return `${create_time?.substring(0, 10)} ${create_time?.substring(11, 19)}`;
         // return TimestampToDate(new Date(create_time).getTime());
+      },
+      sorter: (a, b) => {
+        return new Date(a.create_time).getTime() - new Date(b.create_time).getTime();
       },
     },
     {
@@ -129,6 +141,11 @@ const UserList: React.FC = () => {
               const res = await removeUser(record.id);
               if (res.success === true) {
                 message.success('删除成功');
+                const tableDataSource = formRef.current?.getFieldValue('table') as API.UserItem[];
+                console.log(tableDataSource);
+                formRef.current?.setFieldsValue({
+                  table: tableDataSource.filter((item) => item.id !== record?.id),
+                });
               } else {
                 console.log(res);
               }
@@ -165,6 +182,7 @@ const UserList: React.FC = () => {
               }
             : false
         }
+        formRef={formRef}
         value={dataSource}
         onChange={setDataSource}
         loading={false}
@@ -222,13 +240,6 @@ const UserList: React.FC = () => {
                 last_login_time: TimestampToDate(new Date().getTime()),
                 ip: '0.0.0.0',
               });
-              // const res = await updateUser({
-              //   ...record,
-              //   password: '000000',
-              //   ip: '0.0.0.0',
-              //   last_login_time: '2023-01-12T16:23:48.000Z',
-              //   update_time: '2023-01-12T16:23:48.000Z',
-              // });
               setEdit(false);
 
               if (res.success === true) {
@@ -238,7 +249,8 @@ const UserList: React.FC = () => {
             } else {
               const res = await addUser({
                 ...record,
-                // create_time: new Date().toISOString(),
+                password: '123456',
+                create_time: new Date().toISOString(),
               });
               if (res.success === true) {
                 message.success('添加成功');

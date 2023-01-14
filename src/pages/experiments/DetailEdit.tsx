@@ -6,6 +6,7 @@ import {
   PageContainer,
   ProCard,
   ProForm,
+  ProFormDateRangePicker,
   ProFormDateTimeRangePicker,
 } from '@ant-design/pro-components';
 import RcResizeObserver from 'rc-resize-observer';
@@ -15,6 +16,7 @@ import Dragger from 'antd/lib/upload/Dragger';
 import { InboxOutlined } from '@ant-design/icons';
 import { addExperiment } from '@/services/SimpleOJ/experiment';
 import type { RcFile } from 'antd/lib/upload';
+import { useModel } from 'umi';
 
 const waitTime = (time: number = 100) => {
   return new Promise((resolve) => {
@@ -27,13 +29,13 @@ const waitTime = (time: number = 100) => {
 const DetailEdit: React.FC = () => {
   const [content, setContent] = useState(BraftEditor.createEditorState(null));
   const [file, setFile] = useState<RcFile>();
+  const { initialState } = useModel('@@initialState');
+  const currentUser = initialState?.currentUser;
   // 上传
   const uploadProps: UploadProps = {
     maxCount: 1,
     beforeUpload(fileInfo) {
       setFile(fileInfo);
-      console.log('beforeUpload', file);
-
       return false;
     },
     onChange(info) {
@@ -47,20 +49,12 @@ const DetailEdit: React.FC = () => {
         message.error(`${info.file.name} file upload failed.`);
       }
     },
-    // onDrop(e) {
-    //   setFile(undefined);
-    //   console.log('Dropped files', e.dataTransfer.files);
-    //   console.log('Dropped files', file);
-    // },
     onRemove() {
       setFile(undefined);
-      console.log('Dropped files', file);
     },
   };
   // 拦截文件上传
-
   const handleSubmit = async (formData: FormData) => {
-    // console.log('发布实验', formData.getAll);
     const hide = message.loading('正在发布');
     try {
       const response = await addExperiment(formData);
@@ -94,42 +88,61 @@ const DetailEdit: React.FC = () => {
               </>
             }
             split="horizontal"
-            // bordered
             headerBordered
           >
             <ProCard>
               <ProForm
                 initialValues={{
                   title: '',
+                  content: '',
                   dateTimeRange: [Date.now(), Date.now() + 1000 * 60 * 60 * 24 * 7],
                 }}
                 onFinish={async (values) => {
                   // await waitTime(1000);
-                  console.log('file', file === undefined ? '' : file);
                   const nullFile = new Blob();
                   const formData = new FormData();
+                  // console.log(TimestampToDate(values.dateTimeRange[0]));
                   formData.append('title', values.title);
-                  formData.append('description', values.description.toHTML());
-                  formData.append('publishDate', Date.now().toString());
+                  formData.append('content', values.content.toHTML());
+                  formData.append('publishTime', Date.now().toString());
                   formData.append('startTime', values.dateTimeRange[0]);
                   formData.append('endTime', values.dateTimeRange[1]);
+                  formData.append(
+                    'publisher',
+                    currentUser?.data.name === undefined ? '' : currentUser?.data.name,
+                  );
                   formData.append('file', file === undefined ? nullFile : file);
                   await handleSubmit(formData);
                   return false;
+                }}
+                onChange={(e) => {
+                  // console.log(e.tsarget);
                 }}
                 submitter={{
                   render: (_, dom) => <div>{dom}</div>,
                 }}
               >
-                <ProFormText label="标题" name="title" />
-                <ProFormDateTimeRangePicker
+                <ProFormText
+                  label="标题"
+                  name="title"
+                  rules={[
+                    {
+                      required: true,
+                      message: '标题为必填项',
+                    },
+                  ]}
+                />
+
+                <ProFormDateRangePicker
                   name="dateTimeRange"
                   label="起止日期"
                   fieldProps={{
-                    format: (value) => value.format('YYYY-MM-DD HH:MM:SS'),
+                    onChange: (e) => {
+                      console.log(e);
+                    },
                   }}
                 />
-                <ProForm.Item name="description">
+                <ProForm.Item name="content">
                   <BraftEditor
                     value={content}
                     onChange={async (val) => {

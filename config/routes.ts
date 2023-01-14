@@ -20,24 +20,24 @@
     icon: 'smile',
     component: './common/Index',
   },
-  // {
-  //   path: '/experiment',
-  //   name: '实验',
-  //   icon: 'table',
-  //   component: './Experiment',
-  //   routes: [],
-  // },
+  {
+    path: '/experiment',
+    name: '实验',
+    icon: 'table',
+    component: './Experiment',
+    routes: [],
+  },
   {
     path: '/studentTable',
     name: '学生视角',
     icon: 'table',
-    component: './StudentTable',
+    component: './experiments/StudentTable',
   },
   {
     path: '/teacherTable',
     name: '教师视角',
     icon: 'table',
-    component: './TeacherTable',
+    component: './experiments/TeacherTable',
   },
   {
     path: '/problem',
@@ -74,17 +74,17 @@
   {
     name: '实验提交',
     path: '/experimentSubmit',
-    component: './ExperimentSubmit',
+    component: './experiments/ExperimentSubmitTable',
   },
   // {
   //   name: '题目提交',
   //   path: '/problemSubmit',
-  //   component: './ProblemSubmit',
+  //   component: './ProblemSubmitTable',
   // },
   {
     name: '详情编辑',
     path: '/detailEdit',
-    component: '../components/DetailEdit',
+    component: './experiments/DetailEdit',
   },
   {
     path: '/score',
