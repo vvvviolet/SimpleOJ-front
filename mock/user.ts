@@ -1,5 +1,4 @@
 import type { Request, Response } from 'express';
-import { rearg } from 'lodash';
 
 const waitTime = (time: number = 100) => {
   return new Promise((resolve) => {
@@ -14,52 +13,29 @@ async function getFakeCaptcha(req: Request, res: Response) {
   return res.json('captcha-xxx');
 }
 
-const { ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION } = process.env;
-
-/**
- * 当前用户的权限，如果为空代表没登录
- * current user access， if is '', user need login
- * 如果是 pro 的预览，默认是有权限的
- */
-let access = ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION === 'site' ? 'admin' : '';
-
-const getAccess = () => {
-  return 'admin';
-};
-
-// 代码中会兼容本地 service mock 以及部署站点的静态数据
 export default {
   // 支持值为 Object 和 Array
   'GET /api/currentUser': (req: Request, res: Response) => {
-    // if (!getAccess()) {
-    //   res.status(401).send({
-    //     data: {
-    //       isLogin: false,
-    //     },
-    //     errorCode: '401',
-    //     errorMessage: '请先登录！',
-    //     success: true,
-    //   });
-    //   return;
-    // }
     res.send({
       success: true,
-      status: 'ok',
-      code: 0,
-      msg: '成功',
       data: {
-        user: {
-          id: '000001',
-          name: 'lucas',
-          email: 'admin@gmail.com',
-          phone: '178xxxyyyy',
-          role: 0,
-          status: 1,
-        },
-        token:
-          'eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI0ZTllMDYwNS0xMTNkLTRmMjQtODc3OC0zZGY0Y2EzNTBmOTgiLCJpZCI6ImFkbWluIiwicm9sZSI6IkFkbWluIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiQWRtaW4iLCJpc3N1ZWRBdCI6IjIwMjItMTEtMzBUMTg6MjY6MjAiLCJuYmYiOjE2Njk4MDM5ODAsImV4cCI6MTY2OTgwNDA0MCwiaXNzIjoiU2ltcGxlT2ouYWRtaW4iLCJhdWQiOiJhZG1pbiJ9.-CgHSkvEzd6LQ_XEppqHlyn0-9646vMBvMDQFdAz-cs',
-        ip: '111.187.106.17',
+        id: 1834198,
+        name: 'George',
+        password: '123456',
+        email: 'Betty@testmail.com',
+        phone: '006-43740336-678',
+        status: 1,
+        role: 0,
+        create_time: '2009-06-17T18:17:57.000Z',
+        update_time: '1995-05-21T12:17:10.000Z',
+        last_login_time: '2023-01-13T03:06:38.672Z',
+        ip: '169.163.168.40',
       },
+      errorCode: '',
+      errorMessage: '',
+      showType: 0,
+      traceId: '',
+      host: '',
     });
   },
   // GET POST 可省略

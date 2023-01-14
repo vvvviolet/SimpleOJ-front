@@ -20,72 +20,64 @@
     icon: 'smile',
     component: './common/Index',
   },
+
   {
     path: '/experiment',
     name: '实验',
     icon: 'table',
-    component: './Experiment',
-    routes: [],
-  },
-  {
-    path: '/studentTable',
-    name: '学生视角',
-    icon: 'table',
-    component: './experiments/StudentTable',
-  },
-  {
-    path: '/teacherTable',
-    name: '教师视角',
-    icon: 'table',
-    component: './experiments/TeacherTable',
-  },
-  {
-    path: '/problem',
-    name: '题库',
 
     routes: [
       {
+        name: '详情',
+        path: '/experiment/detail/:id',
+        component: './experiments/Detail',
+        hideInMenu: true,
+      },
+      {
         name: '列表',
-        path: '/problem',
+        // 试试不加/？
+        // path: '/experiment',
+        path: '/experiment/',
+        component: './experiments/Table',
+      },
+
+      {
+        name: '实验提交情况',
+        path: '/experiment/submit/:id',
+        component: './experiments/SubmitTable',
+        hideInMenu: true,
+      },
+      {
+        name: '实验发布',
+        path: '/experiment/detailEdit',
+        component: './experiments/DetailEdit',
+        hideInMenu: true,
+      },
+      {
+        name: '提交日志(debug)',
+        path: '/experiment/submit/test/history',
+        component: './experiments/SubmitLog',
+      },
+    ],
+  },
+  {
+    path: '/problem',
+    name: '题目',
+    icon: 'table',
+    routes: [
+      {
+        name: '列表',
+        path: '/problem/',
         component: './problem/Problem',
       },
       {
         name: '详情',
         path: '/problem/detail',
-        component: './Detail',
+        component: './problem/Detail',
       },
     ],
   },
-  // {
-  //   name: '题目列表',
-  //   path: '/problem',
-  //   component: './problem/Problem',
-  // },
-  {
-    name: '详情',
-    path: '/detail',
-    component: './Detail',
-  },
-  {
-    name: '题目详情',
-    path: '/problemdetail',
-    component: './problem/Detail',
-  },
-  {
-    name: '实验提交',
-    path: '/experimentSubmit',
-    component: './experiments/ExperimentSubmitTable',
-  },
-  // {
-  //   name: '题目提交',
-  //   path: '/problemSubmit',
-  //   component: './ProblemSubmitTable',
-  // },
-  {
-    name: '详情编辑',
-    path: '/detailEdit',
-    component: './experiments/DetailEdit',
-  },
+
   {
     path: '/score',
     name: '成绩管理',

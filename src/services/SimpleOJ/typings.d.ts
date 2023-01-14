@@ -93,52 +93,25 @@ declare namespace API {
   };
 
   type PageParams = {
-    current?: number;
-    pageSize?: number;
+    current: number;
+    pageSize: number;
   };
 
-  type RuleList = {
-    data?: RuleListItem[];
-    /** 列表的内容总数 */
-    total?: number;
-    success?: boolean;
-  };
-
-  type RuleListItem = {
-    key?: number;
-    disabled?: boolean;
-    href?: string;
-    avatar?: string;
-    name?: string;
-    owner?: string;
-    desc?: string;
-    callNo?: number;
-    status?: number;
-    updatedAt?: string;
-    createdAt?: string;
-    progress?: number;
-  };
-
-  type ruleParams = {
-    /** 当前的页码 */
-    current?: number;
-    /** 页面的容量 */
-    pageSize?: number;
-  };
   type PostResult = {
     success: boolean;
+    errorMessage: string;
   };
   // 实验
   type ExperimentItem = {
     id: string;
     title: string;
     description?: string;
-    publishDate: number;
+    publishTime: number;
     //开始时间
     startTime: number;
     status: number;
     //截止时间
-    endTime?: number;
+    endTime: number;
   };
   // 实验列表
   type ExperimentList = {
@@ -185,14 +158,20 @@ declare namespace API {
   };
 
   type ExperimentSubmitList = {
-    data: ExperimentSubmit[];
-    total: number;
+    data: { list: ExperimentSubmit[]; total: number; current: number; pageSize: number };
+    errorCode: string;
+    errorMessage: string;
+    showType: number;
+    traceId: string;
+    host: string;
     success: boolean;
   };
   type ExperimentSubmit = {
-    id: string;
-    title: string;
-    submitTime: string;
+    studentId: string;
+    studentName: string;
+    deadline: string;
+    firstSubmitTime: string;
+    lastSubmitTime: string;
   };
 
   type Notice = {

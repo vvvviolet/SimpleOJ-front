@@ -130,14 +130,7 @@ const ScoreList: React.FC = () => {
         scroll={{
           x: 960,
         }}
-        recordCreatorProps={
-          position !== 'hidden'
-            ? {
-                position: position as 'top',
-                record: () => ({ id: (Math.random() * 1000000).toFixed(0) }),
-              }
-            : false
-        }
+        recordCreatorProps={false}
         loading={false}
         columns={columns}
         request={async () => ({

@@ -1,4 +1,4 @@
-import { Settings as LayoutSettings } from '@ant-design/pro-components';
+import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 
 const Settings: LayoutSettings & {
   pwa?: boolean;
@@ -6,7 +6,7 @@ const Settings: LayoutSettings & {
 } = {
   navTheme: 'light',
   primaryColor: '#1890ff',
-  layout: 'top',
+  layout: 'side',
   contentWidth: 'Fixed',
   fixedHeader: true,
   fixSiderbar: true,

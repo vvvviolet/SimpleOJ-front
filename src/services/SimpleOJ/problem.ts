@@ -23,7 +23,7 @@ export async function problem(
 }
 /** 新建题目 POST /api/experiment **/
 export async function addProblem(options?: { [key: string]: any }) {
-  return request<API.Problem>('/api/problem', {
+  return request<API.ProblemItem>('/api/problem', {
     method: 'POST',
     ...(options || {}),
   });

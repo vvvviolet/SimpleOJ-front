@@ -7,7 +7,6 @@ import {
   ProCard,
   ProForm,
   ProFormDateRangePicker,
-  ProFormDateTimeRangePicker,
 } from '@ant-design/pro-components';
 import RcResizeObserver from 'rc-resize-observer';
 import { ProFormText } from '@ant-design/pro-components';
@@ -17,14 +16,6 @@ import { InboxOutlined } from '@ant-design/icons';
 import { addExperiment } from '@/services/SimpleOJ/experiment';
 import type { RcFile } from 'antd/lib/upload';
 import { useModel } from 'umi';
-
-const waitTime = (time: number = 100) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(true);
-    }, time);
-  });
-};
 
 const DetailEdit: React.FC = () => {
   const [content, setContent] = useState(BraftEditor.createEditorState(null));
@@ -103,7 +94,8 @@ const DetailEdit: React.FC = () => {
                   const formData = new FormData();
                   // console.log(TimestampToDate(values.dateTimeRange[0]));
                   formData.append('title', values.title);
-                  formData.append('content', values.content.toHTML());
+                  console.log(values.content.toHTML());
+                  formData.append('description', values.content.toHTML());
                   formData.append('publishTime', Date.now().toString());
                   formData.append('startTime', values.dateTimeRange[0]);
                   formData.append('endTime', values.dateTimeRange[1]);
@@ -114,9 +106,6 @@ const DetailEdit: React.FC = () => {
                   formData.append('file', file === undefined ? nullFile : file);
                   await handleSubmit(formData);
                   return false;
-                }}
-                onChange={(e) => {
-                  // console.log(e.tsarget);
                 }}
                 submitter={{
                   render: (_, dom) => <div>{dom}</div>,
