@@ -74,7 +74,7 @@ const Detail: React.FC = () => {
             下载附件
           </a>
         </ProCard>
-        <Divider />
+        <ProCard.Divider />
         <ProCard>评论区</ProCard>
       </RcResizeObserver>
       {/* </PageContainer> */}

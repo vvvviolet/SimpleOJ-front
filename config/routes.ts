@@ -48,10 +48,9 @@
         hideInMenu: true,
       },
       {
-        name: '实验发布',
-        path: '/experiment/detailEdit',
-        component: './experiments/DetailEdit',
-        hideInMenu: true,
+        name: '新增',
+        path: '/experiment/new',
+        component: './experiments/New',
       },
       {
         name: '提交日志(debug)',

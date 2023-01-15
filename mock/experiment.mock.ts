@@ -56,7 +56,7 @@ export default {
         studentName: `学生${i}`,
         deadline: Date.now() + 1000000000,
         firstSubmitTime: Date.now(),
-        score: '',
+        score: 0,
         lastSubmitTime: i % 6 === 0 ? Date.now() + 100000000 : null,
       });
     }

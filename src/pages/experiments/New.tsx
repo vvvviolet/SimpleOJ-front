@@ -17,7 +17,6 @@ import { InboxOutlined } from '@ant-design/icons';
 import { addExperiment } from '@/services/SimpleOJ/experiment';
 import type { RcFile } from 'antd/lib/upload';
 import { useModel } from 'umi';
-import { TimestampToDate } from '@/utils/time';
 
 const DetailEdit: React.FC = () => {
   const [content, setContent] = useState(BraftEditor.createEditorState(null));
@@ -48,16 +47,15 @@ const DetailEdit: React.FC = () => {
   };
   // 拦截文件上传
   const handleSubmit = async (formData: FormData) => {
-    const hide = message.loading('正在发布');
     try {
+      message.loading('正在发布');
       const response = await addExperiment(formData);
+      console.log(response);
       if (response?.success === true) {
-        hide();
         message.success('发布成功');
         history.back();
       }
     } catch (error) {
-      // hide();
       message.error('发布失败，请重试！');
     }
   };
@@ -88,25 +86,17 @@ const DetailEdit: React.FC = () => {
                 initialValues={{
                   title: '',
                   content: '',
-                  dateTimeRange: [Date.now(), Date.now() + 1000 * 86400],
+                  dateTimeRange: [1673764059886, 1673764059886 + 1000 * 86400],
                 }}
                 onFinish={async (values) => {
                   // await waitTime(1000);
                   const nullFile = new Blob();
                   const formData = new FormData();
                   formData.append('title', values.title);
-                  // console.log(values.content.toHTML())
-                  // console.log(values.dateTimeRange[0], values.dateTimeRange[1]);
-                  const startTimeStamp = new Date(
-                    values.dateTimeRange[0].replace(' ', 'T'),
-                  ).getTime();
-                  const endTimeStamp = new Date(
-                    values.dateTimeRange[1].replace(' ', 'T'),
-                  ).getTime();
                   formData.append('description', values.content.toHTML());
                   formData.append('publishTime', Date.now().toString());
-                  formData.append('startTime', startTimeStamp.toString());
-                  formData.append('endTime', endTimeStamp.toString());
+                  formData.append('startTime', values.dateTimeRange[0].toString());
+                  formData.append('endTime', values.dateTimeRange[1].toString());
                   formData.append(
                     'publisher',
                     currentUser?.data.name === undefined ? '' : currentUser?.data.name,

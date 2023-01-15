@@ -19,7 +19,7 @@ const TeacherTable: React.FC = () => {
   const columns: ProColumns<API.ExperimentItem>[] = [
     {
       dataIndex: 'id',
-      valueType: 'index',
+      valueType: 'indexBorder',
     },
     {
       title: '名称',
@@ -163,7 +163,7 @@ const TeacherTable: React.FC = () => {
               type="primary"
               key="primary"
               onClick={() => {
-                history.push('./detailEdit');
+                history.push('./new');
               }}
             >
               <PlusOutlined />

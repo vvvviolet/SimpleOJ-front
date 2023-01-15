@@ -5,8 +5,11 @@ import { PageContainer } from '@ant-design/pro-components';
 import { EditableProTable, ProCard, ProFormField } from '@ant-design/pro-components';
 import React, { useState } from 'react';
 import { request, useParams } from 'umi';
-import { Button } from 'antd';
-
+import { Button, message, Space, Table } from 'antd';
+import { inRange } from 'lodash';
+const domain = 'roi69i2lx.hd-bkt.clouddn.com';
+const query =
+  'e=1673761958&token=zxj5KCNaw-RtgKgU6CO2xSzpaaBqOP-_6p7KIgOU:QRPuEajCeFRCgPXG9GMJplkQNAg=';
 const waitTime = (time: number = 100) => {
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -14,18 +17,27 @@ const waitTime = (time: number = 100) => {
     }, time);
   });
 };
-
+const download = async (url: string) => {
+  console.log(url);
+  const eleLink = document.createElement('a');
+  eleLink.style.display = 'none';
+  eleLink.href = url;
+  eleLink.download = '';
+  document.body.appendChild(eleLink);
+  eleLink.click();
+  document.body.removeChild(eleLink);
+};
 export default () => {
   const [editableKeys, setEditableRowKeys] = useState<React.Key[]>([]);
   const [dataSource, setDataSource] = useState<API.ExperimentSubmitItem[]>([]);
   const pageParams: { id: string } | undefined = useParams();
   const columns: ProColumns<API.ExperimentSubmitItem>[] = [
     {
-      dataIndex: 'index',
-      valueType: 'indexBorder',
+      dataIndex: 'id',
+      valueType: 'index',
       hideInSearch: true,
       editable: false,
-      width: 48,
+      width: 40,
     },
     {
       title: '学号',
@@ -63,13 +75,14 @@ export default () => {
       editable: false,
       sorter: (a, b) => Number(a.lastSubmitTime) - Number(b.lastSubmitTime),
       render: (record, entity) => {
-        return TimestampToDate(Number(entity.lastSubmitTime));
+        return entity.lastSubmitTime ? TimestampToDate(Number(entity.lastSubmitTime)) : '-';
       },
     },
     {
       title: '状态',
       valueType: 'select',
       editable: false,
+      onFilter: true,
       valueEnum: {
         true: { text: '已提交', status: 'Success' },
         false: { text: '未提交', status: 'Error' },
@@ -77,6 +90,7 @@ export default () => {
       renderText(text, record, index, action) {
         return record.lastSubmitTime !== null;
       },
+      filtered: true,
     },
     {
       title: '评分',
@@ -97,22 +111,29 @@ export default () => {
       valueType: 'option',
       render: (_, row, index, action) => [
         <a
-          key="a"
+          key="edit"
           onClick={() => {
             action?.startEditable(row.id);
           }}
         >
           编辑
         </a>,
+        row.lastSubmitTime !== null && (
+          <a
+            key="download"
+            href="http://roi69i2lx.hd-bkt.clouddn.com/experiment/1/submit/2025635.zip?e=1673750518&token=zxj5KCNaw-RtgKgU6CO2xSzpaaBqOP-_6p7KIgOU:jRe_-pFOy0OVF4Lm4BKT0dL33gk="
+          >
+            下载
+          </a>
+        ),
       ],
     },
   ];
 
   return (
     <>
-      <PageContainer title={`实验${pageParams?.id}提交情况`}>
+      <PageContainer title={`实验 ${pageParams?.id} 提交情况`}>
         <ProCard
-          title=""
           style={{ paddingLeft: '20px' }}
           extra={
             <>
@@ -127,12 +148,55 @@ export default () => {
             </>
           }
           split="horizontal"
-          // bordered
           headerBordered
         >
           <EditableProTable<API.ExperimentSubmitItem, API.PageParams>
+            rowSelection={{
+              // 自定义选择项参考: https://ant.design/components/table-cn/#components-table-demo-row-selection-custom
+              // 注释该行则默认不显示下拉选项
+              selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT, Table.SELECTION_NONE],
+              defaultSelectedRowKeys: [],
+            }}
             rowKey="id"
-            headerTitle=""
+            tableAlertRender={({ selectedRowKeys, selectedRows, onCleanSelected }) => {
+              console.log(selectedRowKeys);
+              return (
+                <Space size={24}>
+                  <span>
+                    已选 {selectedRowKeys.length} 项
+                    <a style={{ marginInlineStart: 8 }} onClick={onCleanSelected}>
+                      取消选择
+                    </a>
+                  </span>
+                </Space>
+              );
+            }}
+            tableAlertOptionRender={(item) => {
+              return (
+                <Space size={16}>
+                  <a
+                    onClick={async () => {
+                      let cnt = 0;
+                      const idArray = new Array();
+                      for (const i of item.selectedRows) {
+                        if (i.lastSubmitTime !== null) {
+                          cnt += 1;
+                          idArray.push(i.studentId);
+                        }
+                      }
+                      message.info(`批量下载 ${cnt} 项`);
+                      for (const i of idArray) {
+                        await download(
+                          domain + `/experiment/${pageParams?.id}/submit/${i}.zip?` + query,
+                        );
+                      }
+                    }}
+                  >
+                    批量下载
+                  </a>
+                </Space>
+              );
+            }}
             search={{
               labelWidth: 'auto',
             }}
@@ -140,7 +204,17 @@ export default () => {
             scroll={{
               x: 960,
             }}
-            pagination={true}
+            columnsState={{
+              persistenceKey: 'cn',
+              persistenceType: 'localStorage',
+              onChange(value) {
+                console.log('value: ', value);
+              },
+            }}
+            pagination={{
+              pageSize: 10,
+              onChange: (page) => console.log(page),
+            }}
             recordCreatorProps={false}
             loading={false}
             columns={columns}

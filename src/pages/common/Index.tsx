@@ -312,7 +312,10 @@ const Welcome: React.FC = () => {
                         item.description
                       ) : (
                         <Button type="primary">
-                          <a href="http://41083a61b7332265.natapp.cc:44443/api/download/a.zip">
+                          <a
+                            download
+                            href="http://roi69i2lx.hd-bkt.clouddn.com/%E6%95%99%E5%AD%A6%E5%A4%A7%E7%BA%B2.zip?e=1673746118&token=zxj5KCNaw-RtgKgU6CO2xSzpaaBqOP-_6p7KIgOU:eXrTSj_8v-kVP_3fcYfWIfHf_lw="
+                          >
                             查看
                           </a>
                         </Button>

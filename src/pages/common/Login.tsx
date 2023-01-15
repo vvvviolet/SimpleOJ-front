@@ -54,7 +54,7 @@ const Login: React.FC = () => {
         console.log('query', query);
         console.log('history', history.location);
         const { redirect } = query as { redirect: string };
-        history.push(redirect || '/');
+        history.push('/');
         return;
       }
 
