@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Divider, Typography } from 'antd';
+import { Button, Divider, Space, Tag, Typography } from 'antd';
 import { ProCard } from '@ant-design/pro-components';
 import RcResizeObserver from 'rc-resize-observer';
 import { useParams } from 'umi';
@@ -13,6 +13,33 @@ const { Title, Paragraph, Text } = Typography;
 //   printf("hello SimpleOJ!");
 //   return 0;
 // }`;
+
+const dataSource = [
+  {
+    name: '语雀的天空',
+    image:
+      'https://gw.alipayobjects.com/zos/antfincdn/efFD%24IOql2/weixintupian_20170331104822.jpg',
+    desc: '我是一条测试的描述',
+  },
+  {
+    name: 'Ant Design',
+    image:
+      'https://gw.alipayobjects.com/zos/antfincdn/efFD%24IOql2/weixintupian_20170331104822.jpg',
+    desc: '我是一条测试的描述',
+  },
+  {
+    name: '蚂蚁金服体验科技',
+    image:
+      'https://gw.alipayobjects.com/zos/antfincdn/efFD%24IOql2/weixintupian_20170331104822.jpg',
+    desc: '我是一条测试的描述',
+  },
+  {
+    name: 'TechUI',
+    image:
+      'https://gw.alipayobjects.com/zos/antfincdn/efFD%24IOql2/weixintupian_20170331104822.jpg',
+    desc: '我是一条测试的描述',
+  },
+];
 
 const Detail: React.FC = () => {
   const [responsive, setResponsive] = useState(false);

@@ -2,6 +2,10 @@ import type { Request, Response } from 'express';
 export default {
   '/api/experiment': (req: Request, res: Response) => {
     // console.log(req.query);
+
+    const cur = Number(req.query.current === undefined ? 1 : req.query.current);
+    const size = Number(req.query.pageSize === undefined ? 10 : req.query.pageSize);
+
     const experimentList = new Array();
     for (let i = 1; i < 55; i++) {
       experimentList.push({
@@ -11,16 +15,16 @@ export default {
         startTime: Date.now() - 10000000000,
         endTime: Date.now() + (i % 5 === 0 ? 1000000000 + i * 1000 : -1000000000),
         publishTime: Date.now(),
-        publisher: 'cn',
       });
     }
+    // console.log(experimentList);
     res.send({
       success: true,
       data: {
-        list: experimentList,
+        list: experimentList.slice((cur - 1) * size, (cur - 1) * size + size),
         total: experimentList.length,
-        current: req.query.current,
-        pageSize: req.query.pageSize,
+        current: cur,
+        pageSize: size,
       },
       errorCode: '',
       errorMessage: '',
@@ -29,6 +33,7 @@ export default {
       host: '',
     });
   },
+
   '/api/experiment/:id': (req: Request, res: Response) => {
     console.log(req.params);
     res.send({
@@ -46,8 +51,16 @@ export default {
       errorMessage: '',
     });
   },
+
+  // 分页查询提交
   'GET /api/experiment/submit/:id': (req: Request, res: Response) => {
     console.log(req.params);
+    console.log(req.query.current);
+    console.log(req.query.pageSize);
+
+    const cur = Number(req.query.current === undefined ? 1 : req.query.current);
+    const size = Number(req.query.pageSize === undefined ? 10 : req.query.pageSize);
+
     const experimentSubmitList = new Array();
     for (let i = 1; i < 55; i++) {
       experimentSubmitList.push({
@@ -56,6 +69,7 @@ export default {
         studentName: `学生${i}`,
         deadline: Date.now() + 1000000000,
         firstSubmitTime: Date.now(),
+        status: Math.random() % 2 === 0 ? 0 : 1,
         score: 0,
         lastSubmitTime: i % 6 === 0 ? Date.now() + 100000000 : null,
       });
@@ -63,10 +77,10 @@ export default {
     res.send({
       success: true,
       data: {
-        list: experimentSubmitList,
+        list: experimentSubmitList.slice((cur - 1) * size, (cur - 1) * size + size),
         total: experimentSubmitList.length,
-        current: 1,
-        pageSize: 10,
+        current: cur,
+        pageSize: size,
       },
       errorMessage: '',
     });

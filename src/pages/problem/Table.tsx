@@ -79,7 +79,7 @@ const columns: ProColumns<Problem>[] = [
       // <a href={record.url} target="_blank" rel="noopener noreferrer" key="view">
       <a
         onClick={() => {
-          history.push('/problemdetail');
+          history.push('./detail/1');
         }}
         target="_blank"
         rel="noopener noreferrer"
@@ -104,7 +104,7 @@ export default () => {
         actionRef={actionRef}
         cardBordered
         request={async (params = {}, sort, filter) => {
-          console.log(sort, filter);
+          console.log(params);
           return request<{
             data: Problem[];
           }>('https://proapi.azurewebsites.net/github/issues', {
@@ -115,7 +115,7 @@ export default () => {
           type: 'multiple',
         }}
         columnsState={{
-          persistenceKey: 'pro-table-singe-demos',
+          persistenceKey: 'problem',
           persistenceType: 'localStorage',
           onChange(value) {
             console.log('value: ', value);

@@ -93,8 +93,9 @@ declare namespace API {
   };
 
   type PageParams = {
-    current: number;
-    pageSize: number;
+    id?: string;
+    current: string;
+    pageSize: string;
   };
 
   type PostResult = {
@@ -172,6 +173,7 @@ declare namespace API {
     studentName: string;
     deadline: string;
     score?: number;
+    status: number;
     firstSubmitTime: string;
     lastSubmitTime: string;
   };

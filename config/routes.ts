@@ -67,7 +67,7 @@
       {
         name: '列表',
         path: '/problem/',
-        component: './problem/Problem',
+        component: './problem/Table',
       },
       {
         name: '详情',

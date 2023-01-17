@@ -1,12 +1,12 @@
-import { getExperimentSubmit } from '@/services/SimpleOJ/experiment';
 import { TimestampToDate } from '@/utils/time';
 import type { ProColumns } from '@ant-design/pro-components';
 import { PageContainer } from '@ant-design/pro-components';
 import { EditableProTable, ProCard, ProFormField } from '@ant-design/pro-components';
 import React, { useState } from 'react';
-import { request, useParams } from 'umi';
+import { useParams } from 'umi';
 import { Button, message, Space, Table } from 'antd';
-import { inRange } from 'lodash';
+import { request } from 'umi';
+
 const domain = 'roi69i2lx.hd-bkt.clouddn.com';
 const query =
   'e=1673761958&token=zxj5KCNaw-RtgKgU6CO2xSzpaaBqOP-_6p7KIgOU:QRPuEajCeFRCgPXG9GMJplkQNAg=';
@@ -30,7 +30,7 @@ const download = async (url: string) => {
 export default () => {
   const [editableKeys, setEditableRowKeys] = useState<React.Key[]>([]);
   const [dataSource, setDataSource] = useState<API.ExperimentSubmitItem[]>([]);
-  const pageParams: { id: string } | undefined = useParams();
+  const pageParams: API.PageParams = useParams();
   const columns: ProColumns<API.ExperimentSubmitItem>[] = [
     {
       dataIndex: 'id',
@@ -42,7 +42,7 @@ export default () => {
     {
       title: '学号',
       dataIndex: 'studentId',
-      hideInSearch: true,
+      // hideInSearch: true,
 
       sorter: (a, b) => Number(a.studentId) - Number(b.studentId),
       editable: false,
@@ -81,16 +81,16 @@ export default () => {
     {
       title: '状态',
       valueType: 'select',
+      dataIndex: 'status',
       editable: false,
-      onFilter: true,
+      initialValue: 0,
       valueEnum: {
-        true: { text: '已提交', status: 'Success' },
-        false: { text: '未提交', status: 'Error' },
+        1: { text: '已提交', status: 'Success' },
+        0: { text: '未提交', status: 'Error' },
       },
       renderText(text, record, index, action) {
-        return record.lastSubmitTime !== null;
+        return record.lastSubmitTime !== null ? 1 : 0;
       },
-      filtered: true,
     },
     {
       title: '评分',
@@ -151,15 +151,13 @@ export default () => {
           headerBordered
         >
           <EditableProTable<API.ExperimentSubmitItem, API.PageParams>
+            params={pageParams}
             rowSelection={{
-              // 自定义选择项参考: https://ant.design/components/table-cn/#components-table-demo-row-selection-custom
-              // 注释该行则默认不显示下拉选项
               selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT, Table.SELECTION_NONE],
               defaultSelectedRowKeys: [],
             }}
             rowKey="id"
             tableAlertRender={({ selectedRowKeys, selectedRows, onCleanSelected }) => {
-              console.log(selectedRowKeys);
               return (
                 <Space size={24}>
                   <span>
@@ -197,34 +195,52 @@ export default () => {
                 </Space>
               );
             }}
+            form={{
+              syncToUrl: (values, type) => {
+                console.log(values, type);
+                if (type === 'get') {
+                  return {
+                    ...values,
+                    created_at: [values.startTime, values.endTime],
+                  };
+                }
+                return values;
+              },
+            }}
             search={{
               labelWidth: 'auto',
             }}
             maxLength={5}
-            scroll={{
-              x: 960,
-            }}
             columnsState={{
               persistenceKey: 'cn',
               persistenceType: 'localStorage',
-              onChange(value) {
-                console.log('value: ', value);
-              },
             }}
             pagination={{
               pageSize: 10,
-              onChange: (page) => console.log(page),
+              // onChange: (page) => console.log(page),
             }}
             recordCreatorProps={false}
             loading={false}
             columns={columns}
-            request={async (params: API.PageParams & { pageSize: number; current: number }) => {
-              const res = await getExperimentSubmit(
-                pageParams?.id !== undefined ? pageParams?.id : '1',
+            request={async (
+              params: API.PageParams & { pageSize: number; current: number },
+              sort,
+              filter,
+            ) => {
+              const res = await request<API.ExperimentSubmitList>(
+                `/api/experiment/submit/${pageParams?.id !== undefined ? pageParams?.id : '1'}`,
+                {
+                  method: 'GET',
+                  params: {
+                    current: params.current,
+                    pageSize: params.pageSize,
+                  },
+                },
               );
               return {
                 success: res.success,
                 total: res.data.total,
+                page: res.data.current,
                 data: res.data.list,
               };
             }}

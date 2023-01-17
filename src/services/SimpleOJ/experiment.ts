@@ -15,9 +15,9 @@ export async function experiment(
 ) {
   return request<API.ExperimentList>('/api/experiment', {
     method: 'GET',
-    // params: {
-    //   ...params,
-    // },
+    params: {
+      ...params,
+    },
     ...(options || {}),
   });
 }

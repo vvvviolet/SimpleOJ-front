@@ -98,7 +98,6 @@ export default {
           ip: '111.187.106.17',
         },
       });
-      access = 'admin';
       return;
     }
     if (password === 'user' && id === 'user') {
@@ -107,7 +106,6 @@ export default {
         type,
         currentAuthority: 'user',
       });
-      access = 'user';
       return;
     }
     if (type === 'mobile') {
@@ -116,7 +114,6 @@ export default {
         type,
         currentAuthority: 'admin',
       });
-      access = 'admin';
       return;
     }
 
@@ -125,10 +122,8 @@ export default {
       type,
       currentAuthority: 'guest',
     });
-    access = 'guest';
   },
   'GET /api/login/outLogin': (req: Request, res: Response) => {
-    access = '';
     res.send({ data: {}, success: true });
   },
   'POST /api/register': (req: Request, res: Response) => {

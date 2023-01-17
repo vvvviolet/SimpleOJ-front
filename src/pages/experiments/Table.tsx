@@ -2,15 +2,18 @@ import { removeExperiment, experiment, submitExperiment } from '@/services/Simpl
 import { TimestampToDate } from '@/utils/time';
 import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
+import { ProCard, ProFormField } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { Button, message, Space, Upload } from 'antd';
-import React, { useEffect, useRef } from 'react';
-import { history, useModel } from 'umi';
+import React, { useEffect, useRef, useState } from 'react';
+import { history, useModel, useParams } from 'umi';
 
-const TeacherTable: React.FC = () => {
+const Table: React.FC = () => {
   const { initialState } = useModel('@@initialState');
   const currentUser = initialState?.currentUser;
   const actionRef = useRef<ActionType>();
+  const [dataSource, setDataSource] = useState<API.ExperimentItem[]>([]);
+  const pageParams: API.PageParams = useParams();
   useEffect(() => {
     if (currentUser?.data.role === 0) {
       console.log('获取学生提交记录，用来填充首次提交和最后提交时间');
@@ -157,6 +160,7 @@ const TeacherTable: React.FC = () => {
         actionRef={actionRef}
         rowKey="id"
         search={false}
+        params={pageParams}
         toolBarRender={() => [
           currentUser?.data.role === 0 && (
             <Button
@@ -171,18 +175,53 @@ const TeacherTable: React.FC = () => {
             </Button>
           ),
         ]}
-        request={async (params: API.PageParams & { pageSize: number; current: number }) => {
+        form={{
+          syncToUrl: (values, type) => {
+            // console.log(values, type);
+            if (type === 'get') {
+              return {
+                ...values,
+                created_at: [values.startTime, values.endTime],
+              };
+            }
+            return values;
+          },
+        }}
+        pagination={{
+          pageSize: 10,
+        }}
+        request={async (
+          params: API.PageParams & { pageSize: number; current: number },
+          sort,
+          filter,
+        ) => {
           const res = await experiment({ current: params.current, pageSize: params.pageSize });
+          // console.log(res.data);
+          setDataSource(res.data.list);
           return {
             data: res.data.list,
             success: res.success,
             total: res.data.total,
+            page: res.data.current,
           };
         }}
         columns={columns}
       />
+      <ProCard title="表格数据" headerBordered collapsible defaultCollapsed>
+        <ProFormField
+          ignoreFormItem
+          fieldProps={{
+            style: {
+              width: '100%',
+            },
+          }}
+          mode="read"
+          valueType="jsonCode"
+          text={JSON.stringify(dataSource)}
+        />
+      </ProCard>
     </PageContainer>
   );
 };
 
-export default TeacherTable;
+export default Table;
