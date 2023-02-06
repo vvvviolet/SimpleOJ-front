@@ -350,7 +350,7 @@ const Welcome: React.FC = () => {
           collapsible
         >
           <ProCard>
-            <Statistic title="待提交作业" value={0} />
+            <Statistic title="待提交实验" value={0} />
           </ProCard>
           <Divider type={responsive ? 'horizontal' : 'vertical'} />
           <ProCard>

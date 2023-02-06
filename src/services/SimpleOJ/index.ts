@@ -2,13 +2,17 @@
 /* eslint-disable */
 // API 更新时间：
 // API 唯一标识：
-import * as api from './api';
 import * as login from './login';
-import * as rule from './rule';
 import * as experiment from './experiment';
+import * as problem from './problem';
+import * as user from './user';
+import * as welcome from './welcome';
+import * as notice from './notice';
 export default {
-  api,
   login,
-  rule,
   experiment,
+  problem,
+  user,
+  welcome,
+  notice,
 };

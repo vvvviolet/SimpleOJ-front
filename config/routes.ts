@@ -20,7 +20,20 @@
     icon: 'smile',
     component: './common/Index',
   },
-
+  {
+    path: '/discuss',
+    name: '讨论',
+    icon: 'table',
+    component: './Discuss',
+    routes: [
+      {
+        name: '详情',
+        path: '/discuss/detail/:id',
+        component: './Discuss/components/Detail',
+        hideInMenu: true,
+      },
+    ],
+  },
   {
     path: '/experiment',
     name: '实验',
@@ -56,6 +69,7 @@
         name: '提交日志(debug)',
         path: '/experiment/submit/test/history',
         component: './experiments/SubmitLog',
+        hideInMenu: true,
       },
     ],
   },

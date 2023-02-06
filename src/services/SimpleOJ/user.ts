@@ -10,7 +10,7 @@ export async function user(options?: { [key: string]: any }) {
   });
 }
 /** 新建用户 POST /api/user */
-export async function addUser(userData: API.UserItem, options?: { [key: string]: any }) {
+export async function addUser(userData: Entity.User, options?: { [key: string]: any }) {
   return request<API.PostResult>('/api/user', {
     method: 'POST',
     data: userData,
@@ -18,7 +18,7 @@ export async function addUser(userData: API.UserItem, options?: { [key: string]:
   });
 }
 /** 更新用户 PATCH /api/user */
-export async function updateUser(userData, options?: { [key: string]: any }) {
+export async function updateUser(userData: any, options?: { [key: string]: any }) {
   return request<API.PostResult>(`/api/user/${userData.id}`, {
     method: 'PATCH',
     data: userData,
@@ -37,10 +37,17 @@ export async function removeUser(userId: string, options?: { [key: string]: any 
   });
 }
 /* 注册 POST /api/register */
-export async function register(data, options?: { [key: string]: any }) {
+export async function register(data: any, options?: { [key: string]: any }) {
   return request<API.PostResult>('/api/register', {
     method: 'POST',
     data: data,
+    ...(options || {}),
+  });
+}
+/* 注册 POST /api/register */
+export async function currentUser(options?: { [key: string]: any }) {
+  return request<API.PostResult>('/api/currentUser', {
+    method: 'GET',
     ...(options || {}),
   });
 }

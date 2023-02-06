@@ -4,7 +4,6 @@ declare namespace API {
     id: string;
     password: string;
     autoLogin: boolean;
-    type?: string;
   };
   // 后端返回
   type LoginResult = {
@@ -15,40 +14,27 @@ declare namespace API {
     };
     errorMessage: string;
   };
-  // Model定义
-  type UserItem = {
-    id: string;
-    name: string;
-    email: string;
-    phone: string;
-    role: number;
-    status: number;
-    password: string;
-    create_time: string;
-    update_time?: string;
-    last_login_time?: string;
-    access: string;
-    ip: string;
-  };
   // 后端返回
   type CurrentUser = {
     success: boolean;
     errorMessage: string;
-    data: UserItem;
+    data: {
+      ip: string;
+      last_login_time?: number;
+      expToFinish: number;
+      problemSubmitted: number;
+      problemPassed: number;
+    } & Entity.User;
   };
 
   type UserList = {
     data: {
-      list: UserItem[];
+      list: User[];
       current?: number;
       pageSize?: number;
       total?: number;
     };
-    errorCode: string;
     errorMessage: string;
-    showType: number;
-    traceId: string;
-    host: string;
     success: boolean;
   };
   type ErrorResponse = {
@@ -60,33 +46,10 @@ declare namespace API {
     success: boolean;
   };
 
-  type FakeCaptcha = {
-    code?: number;
-    status?: string;
-  };
-
-  type getFakeCaptchaParams = {
-    /** 手机号 */
-    phone?: string;
-  };
-
-  type NoticeIconItem = {
-    id?: string;
-    extra?: string;
-    key?: string;
-    read?: boolean;
-    avatar?: string;
-    title?: string;
-    status?: string;
-    datetime?: string;
-    description?: string;
-    type?: NoticeIconItemType;
-  };
-
   type NoticeIconItemType = 'notification' | 'message' | 'event';
 
   type NoticeIconList = {
-    data?: NoticeIconItem[];
+    data?: Entity.NoticeIcon[];
     /** 列表的内容总数 */
     total?: number;
     success?: boolean;
@@ -102,50 +65,22 @@ declare namespace API {
     success: boolean;
     errorMessage: string;
   };
-  // 实验
-  type ExperimentItem = {
-    id: string;
-    title: string;
-    description?: string;
-    publishTime: number;
-    //开始时间
-    startTime: number;
-    status: number;
-    //截止时间
-    endTime: number;
-  };
+
   // 实验列表
   type ExperimentList = {
     data: {
-      list: ExperimentItem[];
+      list: Entity.Experiment[];
       current?: number;
       pageSize?: number;
       total?: number;
     };
-    errorCode: string;
     errorMessage: string;
-    showType: number;
-    traceId: string;
-    host: string;
     success: boolean;
-  };
-  //题目
-  type ProblemItem = {
-    id?: number;
-    name?: boolean;
-    description?: string;
-    filePath?: string;
-    status?: string;
-    createTime?: string;
-    updateTime?: string;
-    distributeTime?: number;
-    endTime?: number;
-    uploadTimesLimit?: string;
   };
 
   type ProblemList = {
     data: {
-      list: ProblemItem[];
+      list: Entity.Problem[];
       current?: number;
       pageSize?: number;
       total?: number;
@@ -167,16 +102,6 @@ declare namespace API {
     host: string;
     success: boolean;
   };
-  type ExperimentSubmitItem = {
-    id: number;
-    studentId: string;
-    studentName: string;
-    deadline: string;
-    score?: number;
-    status: number;
-    firstSubmitTime: string;
-    lastSubmitTime: string;
-  };
 
   type Notice = {
     success: boolean;
@@ -191,17 +116,78 @@ declare namespace API {
   };
   type NoticeList = {
     data: {
-      list: NoticeItem[];
+      list: Entity.Notice[];
       total: number;
     };
     total: number;
     success: boolean;
   };
-  type NoticeItem = {
+}
+declare namespace Entity {
+  type User = {
+    id: string;
+    name: string;
+    role: number;
+    status: number;
+    create_time: string;
+    update_time?: string;
+    access: string;
+  };
+
+  // 实验
+  type Experiment = {
+    id: string;
+    title: string;
+    description?: string;
+    publishTime: number;
+    //开始时间
+    startTime: number;
+    status: number;
+    //截止时间
+    endTime: number;
+  };
+
+  type Notice = {
     id: number;
     title: string;
     content: string;
     publishDate: Date;
     publisher: string;
+  };
+  type ExperimentSubmit = {
+    id: number;
+    studentId: string;
+    studentName: string;
+    deadline: string;
+    score?: number;
+    status: number;
+    firstSubmitTime: string;
+    lastSubmitTime: string;
+  };
+  //题目
+  type Problem = {
+    id?: number;
+    name?: boolean;
+    description?: string;
+    filePath?: string;
+    status?: string;
+    createTime?: string;
+    updateTime?: string;
+    distributeTime?: number;
+    endTime?: number;
+    uploadTimesLimit?: string;
+  };
+
+  type NoticeIcon = {
+    id?: string;
+    extra?: string;
+    key?: string;
+    read?: boolean;
+    avatar?: string;
+    title?: string;
+    status?: string;
+    datetime?: string;
+    description?: string;
+    type?: NoticeIconItemType;
   };
 }

@@ -24,7 +24,7 @@ const columns: ProColumns<Problem>[] = [
     width: 48,
   },
   {
-    title: '题目',
+    title: '标题',
     dataIndex: 'title',
     ellipsis: true,
   },
@@ -53,21 +53,9 @@ const columns: ProColumns<Problem>[] = [
   },
   {
     disable: true,
-    title: '标签',
-    dataIndex: 'labels',
+    title: '最新提交时间',
+    dataIndex: 'date',
     search: false,
-    renderFormItem: (_, { defaultRender }) => {
-      return defaultRender(_);
-    },
-    render: (_, record) => (
-      <Space>
-        {record.labels.map(({ name, color }) => (
-          <Tag color={color} key={name}>
-            {name}
-          </Tag>
-        ))}
-      </Space>
-    ),
   },
 
   {

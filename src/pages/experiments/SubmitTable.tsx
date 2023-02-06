@@ -42,8 +42,7 @@ export default () => {
     {
       title: '学号',
       dataIndex: 'studentId',
-      // hideInSearch: true,
-
+      hideInSearch: true,
       sorter: (a, b) => Number(a.studentId) - Number(b.studentId),
       editable: false,
     },
@@ -51,7 +50,6 @@ export default () => {
       title: '姓名',
       dataIndex: 'studentName',
       hideInSearch: true,
-
       editable: false,
     },
 
@@ -83,13 +81,9 @@ export default () => {
       valueType: 'select',
       dataIndex: 'status',
       editable: false,
-      initialValue: 0,
       valueEnum: {
         1: { text: '已提交', status: 'Success' },
         0: { text: '未提交', status: 'Error' },
-      },
-      renderText(text, record, index, action) {
-        return record.lastSubmitTime !== null ? 1 : 0;
       },
     },
     {
@@ -222,11 +216,7 @@ export default () => {
             recordCreatorProps={false}
             loading={false}
             columns={columns}
-            request={async (
-              params: API.PageParams & { pageSize: number; current: number },
-              sort,
-              filter,
-            ) => {
+            request={async (params: API.PageParams & { status?: number }, sort, filter) => {
               const res = await request<API.ExperimentSubmitList>(
                 `/api/experiment/submit/${pageParams?.id !== undefined ? pageParams?.id : '1'}`,
                 {
@@ -234,6 +224,7 @@ export default () => {
                   params: {
                     current: params.current,
                     pageSize: params.pageSize,
+                    status: params.status,
                   },
                 },
               );

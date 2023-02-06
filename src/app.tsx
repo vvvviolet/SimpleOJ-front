@@ -7,7 +7,7 @@ import { notification } from 'antd';
 import type { RequestConfig, RunTimeLayoutConfig } from 'umi';
 import { history, Link } from 'umi';
 import defaultSettings from '../config/defaultSettings';
-import { currentUser as queryCurrentUser } from './services/SimpleOJ/api';
+import { currentUser as queryCurrentUser } from './services/SimpleOJ/user';
 
 const isDev = process.env.NODE_ENV === 'development';
 // const isDev = false;

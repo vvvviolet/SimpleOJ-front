@@ -34,7 +34,6 @@ const Table: React.FC = () => {
           <a
             onClick={() => {
               {
-                //TODO: 页面之间传参，传id
                 history.push(`./detail/${entity.id}`);
               }
             }}
@@ -78,7 +77,6 @@ const Table: React.FC = () => {
         return [];
       },
       hideInTable: currentUser?.data.role !== 0,
-      // 这里根据currentUser.data.role的值来判断是否展示，若为0说明是学生，则显示
     },
     {
       title: '最后提交时间',
@@ -87,7 +85,6 @@ const Table: React.FC = () => {
         return [];
       },
       hideInTable: currentUser?.data.role !== 0,
-      // 这里根据currentUser.data.role的值来判断是否展示，若为0说明是学生，则显示
     },
     {
       title: '操作',
