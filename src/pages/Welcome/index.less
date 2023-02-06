@@ -1,0 +1,54 @@
+@import (reference) '~antd/es/style/themes/index';
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: auto;
+  background: @layout-body-background;
+}
+
+.lang {
+  width: 100%;
+  height: 40px;
+  line-height: 44px;
+  text-align: right;
+  :global(.ant-dropdown-trigger) {
+    margin-right: 24px;
+  }
+}
+
+.content {
+  flex: 1;
+  padding: 32px 0;
+  color: white;
+}
+
+@media (min-width: @screen-md-min) {
+  .container {
+    // background-image: url('https://gw.alipayobjects.com/zos/rmsportal/TVYTbAXWheQpRcWDaDMu.svg');
+    // background-image: url('http://roi69i2lx.hd-bkt.clouddn.com/cool-background.png?e=1673919698&token=zxj5KCNaw-RtgKgU6CO2xSzpaaBqOP-_6p7KIgOU:IqWrEv5mJq2OMpVWykY4ZevEksg=');
+    background-image: url('http://roi69i2lx.hd-bkt.clouddn.com/cool-background.svg?e=1673920040&token=zxj5KCNaw-RtgKgU6CO2xSzpaaBqOP-_6p7KIgOU:gT_ItvoqgA2KbclxrVfekwroZmE=');
+    background-repeat: no-repeat;
+    // background-position: center 110px;
+    background-position: center;
+    background-size: 100%;
+  }
+
+  .content {
+    padding: 32px 0 24px;
+  }
+}
+
+.icon {
+  margin-left: 8px;
+  color: rgba(0, 0, 0, 0.2);
+  font-size: 24px;
+  vertical-align: middle;
+  cursor: pointer;
+  transition: color 0.3s;
+
+  &:hover {
+    color: @primary-color;
+  }
+}

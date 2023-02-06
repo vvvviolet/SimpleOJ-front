@@ -6,9 +6,8 @@
       {
         name: 'login',
         path: '/login/login',
-        component: './common/Login',
+        component: './Login',
       },
-
       {
         component: './404',
       },
@@ -18,21 +17,7 @@
     path: '/index',
     name: '主页',
     icon: 'smile',
-    component: './common/Index',
-  },
-  {
-    path: '/discuss',
-    name: '讨论',
-    icon: 'table',
-    component: './Discuss',
-    routes: [
-      {
-        name: '详情',
-        path: '/discuss/detail/:id',
-        component: './Discuss/components/Detail',
-        hideInMenu: true,
-      },
-    ],
+    component: './Welcome',
   },
   {
     path: '/experiment',
@@ -43,7 +28,7 @@
       {
         name: '详情',
         path: '/experiment/detail/:id',
-        component: './experiments/Detail',
+        component: './Experiments/Detail',
         hideInMenu: true,
       },
       {
@@ -51,24 +36,24 @@
         // 试试不加/？
         // path: '/experiment',
         path: '/experiment/',
-        component: './experiments/Table',
+        component: './Experiments',
       },
 
       {
         name: '实验提交情况',
         path: '/experiment/submit/:id',
-        component: './experiments/SubmitTable',
+        component: './Experiments/SubmitTable',
         hideInMenu: true,
       },
       {
         name: '新增',
         path: '/experiment/new',
-        component: './experiments/New',
+        component: './Experiments/New',
       },
       {
         name: '提交日志(debug)',
         path: '/experiment/submit/test/history',
-        component: './experiments/SubmitLog',
+        component: './Experiments/SubmitLog',
         hideInMenu: true,
       },
     ],
@@ -81,12 +66,12 @@
       {
         name: '列表',
         path: '/problem/',
-        component: './problem/Table',
+        component: './Problem',
       },
       {
         name: '详情',
         path: '/problem/detail',
-        component: './problem/Detail',
+        component: './Problem/Detail',
       },
     ],
   },
@@ -107,7 +92,7 @@
       {
         path: '/admin/user',
         name: '用户管理',
-        component: './admin/User',
+        component: './Admin',
       },
       {
         path: '/admin/system',

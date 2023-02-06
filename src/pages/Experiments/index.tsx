@@ -8,18 +8,18 @@ import { Button, message, Space, Upload } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import { history, useModel, useParams } from 'umi';
 
-const Table: React.FC = () => {
+const Experiment: React.FC = () => {
   const { initialState } = useModel('@@initialState');
   const currentUser = initialState?.currentUser;
   const actionRef = useRef<ActionType>();
-  const [dataSource, setDataSource] = useState<API.ExperimentItem[]>([]);
+  const [dataSource, setDataSource] = useState<Entity.Experiment[]>([]);
   const pageParams: API.PageParams = useParams();
   useEffect(() => {
     if (currentUser?.data.role === 0) {
       console.log('获取学生提交记录，用来填充首次提交和最后提交时间');
     }
   }, [currentUser?.data.role]);
-  const columns: ProColumns<API.ExperimentItem>[] = [
+  const columns: ProColumns<Entity.Experiment>[] = [
     {
       dataIndex: 'id',
       valueType: 'indexBorder',
@@ -152,7 +152,7 @@ const Table: React.FC = () => {
 
   return (
     <PageContainer>
-      <ProTable<API.ExperimentItem, API.PageParams>
+      <ProTable<Entity.Experiment, API.PageParams>
         headerTitle="实验项目"
         actionRef={actionRef}
         rowKey="id"
@@ -221,4 +221,4 @@ const Table: React.FC = () => {
   );
 };
 
-export default Table;
+export default Experiment;

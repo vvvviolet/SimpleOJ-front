@@ -19,7 +19,7 @@ type LoginType = 'phone' | 'account' | 'reset';
 type LayoutType = Parameters<typeof ProForm>[0]['layout'];
 const LAYOUT_TYPE_HORIZONTAL = 'horizontal';
 
-function handleAdd(value: API.UserItem) {
+function handleAdd(value: Entity.User) {
   return true;
 }
 
